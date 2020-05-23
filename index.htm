@@ -9,13 +9,25 @@
       name="description"
       content="mobile activation map"
     />
-    <meta name="keywords" content="HTML,CSS,JavaScript, WebRTC, Camera" />
-    <meta name="author" content="Kasper Kamperman" />
+    <meta name="keywords" content="tensorflow.js, WebRTC, Camera" />
+    <meta name="author" content="Chao Wang" />
     <title>Chao's mobile CAM </title>
     <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
   </head>
   <body>
-    <div id="container">
+    <div class="container-fluid">
+      <div class="row h-75">
+        <div class="col-12 m-0 p-0 bg-secondary">
+          <video id="video" autoplay playsinline></video>
+        </div>
+      </div>
+      <div class="row h-25 align-items-center justify-content-center">
+        <button type="button" class="btn btn-success">shot</button>
+      </div>
       <!-- <div id="vid_container">
         <video id="video" autoplay playsinline></video>
         <div id="video_overlay"></div>
