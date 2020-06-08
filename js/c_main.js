@@ -83,10 +83,9 @@ function initCameraUI() {
   toggleFullScreenButton = document.getElementById('toggleFullScreenButton');
   switchCameraButton = document.getElementById('switchCameraButton');
 
+  // set camera focus rect size and position
   let camera_width = video.offsetWidth;
-  let camera_height = video.offsetHeight;
 
-  //set camera focus rect size and position
   let focus_side_length = 0.9 * camera_width;
   console.log(focus_side_length);
   let focus_rect = document.getElementById("focus_rect");
@@ -95,47 +94,13 @@ function initCameraUI() {
   let t_val = 'translate(' + (-focus_side_length/2) + ' ' + (-focus_side_length/2) + ')';
   focus_rect.setAttribute("transform", t_val);
 
-  // let side_length = 0.9 * camera_width;
-  // let square_center_x = 0.5 * camera_width;
-  // let square_center_y = 0.5 * camera_height;
-  // let mask_points = {
-  //   x_0:0,
-  //   y_0:0,
-  //   x_1:0,
-  //   y_1:camera_height,
-  //   x_2:square_center_x - side_length/2,
-  //   y_2:camera_height,
-  //   x_3:square_center_x - side_length/2,
-  //   y_3:square_center_y - side_length/2,
-  //   x_4:square_center_x + side_length/2,
-  //   y_4:square_center_y - side_length/2,
-  //   x_5:square_center_x + side_length/2,
-  //   y_5:square_center_y + side_length/2,
-  //   x_6:square_center_x - side_length/2,
-  //   y_6:square_center_y + side_length/2,
-  //   x_7:square_center_x - side_length/2,
-  //   y_7:camera_height,
-  //   x_8:camera_width,
-  //   x_8:camera_height,
-  //   x_9:camera_width,
-  //   y_9:camera_height
-  // }
-  
-  // video_cover.style.setProperty('p0_x',0);
-  // video_cover.style.setProperty('p0_y',0);
-  // video_cover.style.setProperty('p1_x',0);
-  // video_cover.style.setProperty('p1_y',camera_height);
-  // video_cover.style.setProperty('p2_x',square_center_x - side_length/2);
-  // video_cover.style.setProperty('p3_y',square_center_x - side_length/2);
-  // video_cover.style.setProperty('p3_x',square_center_x - side_length/2);
-
   // https://developer.mozilla.org/nl/docs/Web/HTML/Element/button
   // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role
 
-  // takePhotoButton.addEventListener('click', function () {
-  //   takeSnapshotUI();
-  //   takeSnapshot();
-  // });
+  takePhotoButton.addEventListener('click', function () {
+    // takeSnapshotUI();
+    takeSnapshot();
+  });
 
   // -- fullscreen part
 
@@ -222,15 +187,15 @@ function initCameraStream() {
 
   // we ask for a square resolution, it will cropped on top (landscape)
   // or cropped at the sides (landscape)
-  var size = 1280;
+  // var size = 1280;
 
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: size },
-      height: { ideal: size },
-      //width: { min: 1024, ideal: window.innerWidth, max: 1920 },
-      //height: { min: 776, ideal: window.innerHeight, max: 1080 },
+      // width: { ideal: size },
+      // height: { ideal: size },
+      width: { min: 0, ideal: window.innerWidth, max: 1920 },
+      height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: currentFacingMode,
     },
   };
@@ -261,4 +226,53 @@ function initCameraStream() {
   function handleError(error) {
     console.error('getUserMedia() error: ', error);
   }
+}
+
+function takeSnapshot() {
+  // if you'd like to show the canvas add it to the DOM
+  var canvas = document.createElement('canvas');
+
+  var width = video.videoWidth;
+  var height = video.videoHeight;
+
+  let camera_width = video.offsetWidth;
+  let camera_height = video.offsetHeight;
+
+  canvas.width = width;
+  canvas.height = height;
+
+  // canvas.width = camera_width;
+  // canvas.height = camera_height;
+
+  context = canvas.getContext('2d');
+  context.drawImage(video, 0, 0, width, height);
+
+  // polyfil if needed https://github.com/blueimp/JavaScript-Canvas-to-Blob
+
+  // https://developers.google.com/web/fundamentals/primers/promises
+  // https://stackoverflow.com/questions/42458849/access-blob-value-outside-of-canvas-toblob-async-function
+  function getCanvasBlob(canvas) {
+    return new Promise(function (resolve, reject) {
+      canvas.toBlob(function (blob) {
+        resolve(blob);
+      }, 'image/jpeg');
+    });
+  }
+
+  // some API's (like Azure Custom Vision) need a blob with image data
+  getCanvasBlob(canvas).then(function (blob) {
+    // do something with the image blob
+
+    var newImg = document.createElement('img'),
+    url = URL.createObjectURL(blob);
+
+    newImg.onload = function() {
+      // no longer need to read the blob so it's revoked
+      URL.revokeObjectURL(url);
+    };
+
+    newImg.src = url;
+    document.body.appendChild(newImg);
+
+  });
 }
