@@ -13,6 +13,7 @@ const mainDisplayDiv = document.getElementById('mainDisplayDiv');
 
 
 var video;
+const orginVideoHeight = 1280;
 var takePhotoButton;
 var toggleFullScreenButton;
 var switchCameraButton;
@@ -28,8 +29,8 @@ let focusCtx = focusCnv.getContext('2d');
 let focus_center_x_p = 0.5; 
 let focus_center_y_p = 0.4;
 
-let videoWidth;
-let videoHeight;
+let screenWidth;
+let screenHeight;
 
 let focus_offset_x;
 let focus_offset_y; 
@@ -116,15 +117,13 @@ function initCameraUI() {
   switchCameraButton = document.getElementById('switchCameraButton');
 
   // set camera focus rect size and position
-  videoWidth = video.offsetWidth;
-  videoHeight = video.offsetHeight;
-  console.log("video true width:" + video.videoWidth);
-  console.log("video true width:" + video.videoHeight);
+  screenWidth = video.offsetWidth;
+  screenHeight = video.offsetHeight;
 
-  console.log("video offset Width: " + videoWidth);
-  console.log("video offset Height: " + videoHeight);
+  console.log("screenWidth: " + screenWidth);
+  console.log("screenHeight: " + screenHeight);
 
-  focus_side_length = Math.round(0.9 * videoWidth);
+  focus_side_length = Math.round(0.9 * screenWidth);
   console.log("focus area side width: " + focus_side_length);
   let focus_rect = document.getElementById("focus_rect");
   focus_rect.setAttribute("height", focus_side_length);
@@ -145,8 +144,8 @@ function initCameraUI() {
   focusCnv.height = focus_side_length;
   focusCnv.style.position = 'absolute';
 
-  focus_offset_x = videoWidth * focus_center_x_p - focus_side_length/2;
-  focus_offset_y = videoHeight * focus_center_y_p - focus_side_length/2;
+  focus_offset_x = screenWidth * focus_center_x_p - focus_side_length/2;
+  focus_offset_y = screenHeight * focus_center_y_p - focus_side_length/2;
   focusCnv.style.left = focus_offset_x;
   focusCnv.style.top = focus_offset_y;
 
@@ -158,13 +157,11 @@ function initCameraStream() {
 
   // we ask for a square resolution, it will cropped on top (landscape)
   // or cropped at the sides (landscape)
-  var size = 1280;
-
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: size },
-      height: { ideal: size },
+      width: { ideal: orginVideoHeight },
+      height: { ideal: orginVideoHeight },
       // width: { min: 0, ideal: window.innerWidth, max: 1920 },
       // height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: currentFacingMode,
@@ -203,14 +200,22 @@ function initCameraStream() {
   // if you'd like to show the canvas add it to the DOM
   var canvas = document.createElement('canvas');
 
-  canvas.width = videoWidth;
-  canvas.height = videoHeight;
+  canvas.width = screenWidth;
+  canvas.height = screenHeight;
 
   canvas.className = 'displayTakenPhoto';
   canvas.setAttribute("id", "takenPhoto");
 
   context = canvas.getContext('2d');
-  context.drawImage(video, 0, 0, videoWidth, videoHeight);
+  // make canvas to draw cropped image of video according to the screen size. 
+  // s_x = orginVideoHeight/2 - screenWidth/2;
+  // s_y = orginVideoHeight/2 - screenHeight/2;
+  let orginVideoWidth = orginVideoHeight;
+  s_height = orginVideoHeight;
+  s_width = s_height * screenWidth/screenHeight; 
+  s_x = orginVideoWidth/2 - s_width/2
+
+  context.drawImage(video, s_x, 0, s_width, s_height, 0, 0, screenWidth, screenHeight);
   mainDisplayDiv.appendChild(canvas);
 
   stopVideoStream();
