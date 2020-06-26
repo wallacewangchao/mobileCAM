@@ -118,9 +118,11 @@ function initCameraUI() {
   // set camera focus rect size and position
   videoWidth = video.offsetWidth;
   videoHeight = video.offsetHeight;
+  console.log("video true width:" + video.videoWidth);
+  console.log("video true width:" + video.videoHeight);
 
-  console.log("videoWidth: " + videoWidth);
-  console.log("videoHeight: " + videoHeight);
+  console.log("video offset Width: " + videoWidth);
+  console.log("video offset Height: " + videoHeight);
 
   focus_side_length = Math.round(0.9 * videoWidth);
   console.log("focus area side width: " + focus_side_length);
@@ -156,15 +158,15 @@ function initCameraStream() {
 
   // we ask for a square resolution, it will cropped on top (landscape)
   // or cropped at the sides (landscape)
-  // var size = 1280;
+  var size = 1280;
 
   var constraints = {
     audio: false,
     video: {
-      // width: { ideal: size },
-      // height: { ideal: size },
-      width: { min: 0, ideal: window.innerWidth, max: 1920 },
-      height: { min: 0, ideal: window.innerHeight, max: 1080 },
+      width: { ideal: size },
+      height: { ideal: size },
+      // width: { min: 0, ideal: window.innerWidth, max: 1920 },
+      // height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: currentFacingMode,
     },
   };
