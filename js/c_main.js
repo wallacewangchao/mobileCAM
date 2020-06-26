@@ -1,9 +1,35 @@
+//tensorflow parameters
+const inpMin = -1, inpMax = 1, normConst = (inpMax - inpMin)/255.0;
+const input_shape = 224, topK = 3;
+const radio_btns = document.getElementsByName('options');
+const radio_btn_labels = document.getElementsByName('prediction_labels');
+let modelReady = false;
+let act_data;
+let act_average;
+let act_max;
+let set_act_max = 36; 
+
 var video;
 var takePhotoButton;
 var toggleFullScreenButton;
 var switchCameraButton;
 var amountOfCameras = 0;
 var currentFacingMode = 'environment';
+
+// focus area side length 
+let focus_side_length;
+let focusCnv = document.getElementById('focusDiv');
+let focusCtx = focusCnv.getContext('2d');
+
+// focus area relative position regarding the screen 
+let focus_center_x_p = 0.5; 
+let focus_center_y_p = 0.4;
+
+let videoWidth;
+let videoHeight;
+
+let focus_offset_x;
+let focus_offset_y; 
 
 // this function counts the amount of video inputs
 function deviceCount() {
@@ -74,6 +100,9 @@ document.addEventListener('DOMContentLoaded', function (event) {
       'Mobile camera is not supported by browser, or there is no camera detected/connected',
       );
   }
+
+  init();
+
 });
 
 function initCameraUI() {
@@ -84,106 +113,43 @@ function initCameraUI() {
   switchCameraButton = document.getElementById('switchCameraButton');
 
   // set camera focus rect size and position
-  let camera_width = video.offsetWidth;
+  videoWidth = video.offsetWidth;
+  videoHeight = video.offsetHeight;
 
-  let focus_side_length = 0.9 * camera_width;
-  console.log(focus_side_length);
+  console.log("videoWidth: " + videoWidth);
+  console.log("videoHeight: " + videoHeight);
+
+  focus_side_length = Math.round(0.9 * videoWidth);
+  console.log("focus area side width: " + focus_side_length);
   let focus_rect = document.getElementById("focus_rect");
   focus_rect.setAttribute("height", focus_side_length);
   focus_rect.setAttribute("width", focus_side_length);
+
+  let x_val = focus_center_x_p*100 + '%';
+  let y_val = focus_center_y_p*100 + '%';
+
+  focus_rect.setAttribute("x", x_val);
+  focus_rect.setAttribute("y", y_val);
+
   let t_val = 'translate(' + (-focus_side_length/2) + ' ' + (-focus_side_length/2) + ')';
   focus_rect.setAttribute("transform", t_val);
 
-  // https://developer.mozilla.org/nl/docs/Web/HTML/Element/button
-  // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role
+  // set canvas of activation vis location
+  
+  focusCnv.width = focus_side_length;
+  focusCnv.height = focus_side_length;
+  focusCnv.style.position = 'absolute';
 
-  takePhotoButton.addEventListener('click', function () {
-    // takeSnapshotUI();
-    takeSnapshot();
-  });
+  focus_offset_x = videoWidth * focus_center_x_p - focus_side_length/2;
+  focus_offset_y = videoHeight * focus_center_y_p - focus_side_length/2;
+  focusCnv.style.left = focus_offset_x;
+  focusCnv.style.top = focus_offset_y;
 
-  // -- fullscreen part
-
-  // function fullScreenChange() {
-  //   if (screenfull.isFullscreen) {
-  //     toggleFullScreenButton.setAttribute('aria-pressed', true);
-  //   } else {
-  //     toggleFullScreenButton.setAttribute('aria-pressed', false);
-  //   }
-  // }
-
-  // if (screenfull.isEnabled) {
-  //   screenfull.on('change', fullScreenChange);
-
-  //   toggleFullScreenButton.style.display = 'block';
-
-  //   // set init values
-  //   fullScreenChange();
-
-  //   toggleFullScreenButton.addEventListener('click', function () {
-  //     screenfull.toggle(document.getElementById('container')).then(function () {
-  //       console.log(
-  //         'Fullscreen mode: ' +
-  //           (screenfull.isFullscreen ? 'enabled' : 'disabled'),
-  //       );
-  //     });
-  //   });
-  // } else {
-  //   console.log("iOS doesn't support fullscreen (yet)");
-  // }
-
-  // -- switch camera part
-  // if (amountOfCameras > 1) {
-  //   switchCameraButton.style.display = 'block';
-
-  //   switchCameraButton.addEventListener('click', function () {
-  //     if (currentFacingMode === 'environment') currentFacingMode = 'user';
-  //     else currentFacingMode = 'environment';
-
-  //     initCameraStream();
-  //   });
-  // }
-
-  // Listen for orientation changes to make sure buttons stay at the side of the
-  // physical (and virtual) buttons (opposite of camera) most of the layout change is done by CSS media queries
-  // https://www.sitepoint.com/introducing-screen-orientation-api/
-  // https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
-  // window.addEventListener(
-  //   'orientationchange',
-  //   function () {
-  //     // iOS doesn't have screen.orientation, so fallback to window.orientation.
-  //     // screen.orientation will
-  //     if (screen.orientation) angle = screen.orientation.angle;
-  //     else angle = window.orientation;
-
-  //     var guiControls = document.getElementById('gui_controls').classList;
-  //     var vidContainer = document.getElementById('vid_container').classList;
-
-  //     if (angle == 270 || angle == -90) {
-  //       guiControls.add('left');
-  //       vidContainer.add('left');
-  //     } else {
-  //       if (guiControls.contains('left')) guiControls.remove('left');
-  //       if (vidContainer.contains('left')) vidContainer.remove('left');
-  //     }
-
-  //     //0   portrait-primary
-  //     //180 portrait-secondary device is down under
-  //     //90  landscape-primary  buttons at the right
-  //     //270 landscape-secondary buttons at the left
-  //   },
-  //   false,
-  // );
 }
 
 function initCameraStream() {
   // stop any active streams in the window
-  if (window.stream) {
-    window.stream.getTracks().forEach(function (track) {
-      console.log(track);
-      track.stop();
-    });
-  }
+  stopVideoStream();
 
   // we ask for a square resolution, it will cropped on top (landscape)
   // or cropped at the sides (landscape)
@@ -232,21 +198,12 @@ function takeSnapshot() {
   // if you'd like to show the canvas add it to the DOM
   var canvas = document.createElement('canvas');
 
-  var width = video.videoWidth;
-  var height = video.videoHeight;
+  canvas.width = videoWidth;
+  canvas.height = videoHeight;
 
-  let camera_width = video.offsetWidth;
-  let camera_height = video.offsetHeight;
-
-  canvas.width = width;
-  canvas.height = height;
-
-  // canvas.width = camera_width;
-  // canvas.height = camera_height;
-
+  canvas.className = 'displayTakenPhoto';
   context = canvas.getContext('2d');
-  context.drawImage(video, 0, 0, width, height);
-
+  context.drawImage(video, 0, 0, videoWidth, videoHeight);
   // polyfil if needed https://github.com/blueimp/JavaScript-Canvas-to-Blob
 
   // https://developers.google.com/web/fundamentals/primers/promises
@@ -266,13 +223,165 @@ function takeSnapshot() {
     var newImg = document.createElement('img'),
     url = URL.createObjectURL(blob);
 
+    newImg.setAttribute("id", "takenPhoto");
+
     newImg.onload = function() {
       // no longer need to read the blob so it's revoked
       URL.revokeObjectURL(url);
     };
 
     newImg.src = url;
-    document.body.appendChild(newImg);
 
+    let mainContainer = document.getElementById('mainDisplayDiv');
+    mainContainer.appendChild(newImg);
+    newImg.className = 'displayTakenPhoto';
   });
+  document.body.appendChild(canvas);
+
+  stopVideoStream();
+  document.getElementById('sliderDiv').className = 'slider';
+  document.getElementById('takePhotoButton').style.visibility = "hidden";
+}
+
+function retakePhoto(){
+  focusCtx.clearRect(0,0, focus_side_length,focus_side_length);
+  document.getElementById('sliderDiv').className = 'slider closed';
+  initCameraStream();  
+  document.getElementById('takenPhoto').remove();
+  document.getElementById('takePhotoButton').style.visibility = "visible";
+}
+
+function stopVideoStream(){
+  if (window.stream) {
+    window.stream.getTracks().forEach(function (track) {
+      console.log(track);
+      track.stop();
+    });
+  }
+}
+
+// CAM part
+const init = async () => {
+  await loadLayersModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json');
+  console.log('model loaded');
+}
+
+async function loadLayersModel(modelUrl) {
+  let ti = performance.now();
+  mobilenet = await tf.loadLayersModel(modelUrl, {
+    onProgress: (fraction) => {
+      // document.getElementById('output').innerText = "loading progress " + fraction.toFixed(2);
+    }
+  });
+  console.log('model loaded ' + Math.round(performance.now() - ti) + ' ms');
+  // document.getElementById('output').innerText = "Model is loaded!";
+  const layer = mobilenet.getLayer('conv_pw_13_relu');
+  baseModel = tf.model({inputs: mobilenet.inputs, outputs: layer.output});
+
+  const layerPred = await mobilenet.getLayer('conv_preds');
+//  const weight985 = layerPred.getWeights()[0].slice([0,0,0,985],[1,1,-1,1]);
+  weightsPred = layerPred.getWeights()[0];
+  // makeModel(index);
+}
+async function makeModel(ind) {
+  if(modelReady) model.dispose();
+  modelReady = true;
+  const weightInd = weightsPred.slice([0,0,0, parseInt(ind)],[1,1,-1,1]);
+  model = tf.sequential({
+    layers: [
+      tf.layers.conv2d({
+        inputShape: [7,7,1024],  filters: 1,  kernelSize: 1,
+        useBias: false, weights: [weightInd]
+      })
+    ]
+  });
+}
+
+async function rect(){
+
+  let canvas = document.createElement('canvas');
+  let context = canvas.getContext('2d');
+  let img = document.getElementById('takenPhoto');
+  canvas.width = focus_side_length;
+  canvas.height = focus_side_length;
+  console.log(focus_offset_x);
+  console.log(focus_offset_y);
+
+  context.drawImage(img, focus_offset_x, focus_offset_y, focus_side_length,focus_side_length, 0, 0, input_shape, input_shape);
+  var imgData = context.getImageData(0, 0, input_shape, input_shape);
+  return imgData;
+}
+
+async function classify() {
+  let imgData = await rect();
+  const batched = tf.tidy( () => {
+    const image = tf.browser.fromPixels(imgData);
+    const normalized = image.toFloat().mul(normConst).add(inpMin);
+    return normalized.reshape([-1, input_shape, input_shape, 3]);
+  });
+  const softmax = mobilenet.predict(batched);
+  const predictions = await getTopKClassesKeras(softmax, topK);
+  
+  let str = "I think it is a:";
+  // for(let i=0; i<topK; i++)
+  //   str += "\n" + predictions[i].probability.toFixed(3) + " - " + predictions[i].classInd +
+  //     " - " + predictions[i].className;
+  // document.getElementById('output').innerText = str;
+  
+  //toggle buttons for classify objects
+  for(let i = 0; i < radio_btns.length; i++) {
+    radio_btns[i].value = predictions[i].classInd;
+    radio_btn_labels[i].innerText = predictions[i].className + " - " + (predictions[i].probability * 100).toFixed(1) + "%";
+  }
+
+  let radio_btn_ind = check_radio_Index();
+  makeModel(predictions[radio_btn_ind].classInd);
+
+  const basePredict = baseModel.predict(batched);
+  const predicted = model.predict(basePredict);
+  act_data = predicted.dataSync();
+
+  basePredict.dispose();
+  predicted.dispose();
+  let ma = act_data[0], sum = ma;
+  // cacluate the max activation and average activation 
+  for(let i = 1; i < 49; i++ ){
+    let di = act_data[i];
+    sum += di;
+
+    // cacluate the max activation
+    if(ma < di)  ma = di;
+  }
+  act_max = ma;
+  act_average = sum/49;
+  console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
+
+  drawSquare();
+}
+
+function drawSquare() {
+
+  let k = 0;
+  focusCtx.clearRect(0,0, focus_side_length,focus_side_length);
+  let m = focus_side_length/7;
+  for(let i=0; i < 7; i++){
+    for (let j=0; j < 7; j++, k++){
+      focusCtx.beginPath();
+      focusCtx.rect([j]*m, [i]*m, m, m);
+      // let alpha = Math.max((1 - Math.exp(0.095*(act_data[k] - set_act_max))), 0);
+      let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
+      focusCtx.fillStyle = 'rgba(255, 0, 0  ,' + alpha + ')';
+      // out_ctx3.fillStyle = 'rgba(82, 97, 110  ,' + alpha + ')';
+      focusCtx.fill();
+    }
+  }
+  console.log("set_act_max: " + set_act_max);
+}
+
+function check_radio_Index(){
+  for (let i=0; i < radio_btns.length; i ++){
+    if (radio_btns[i].checked){
+      return i;
+    }
+  }
 }
