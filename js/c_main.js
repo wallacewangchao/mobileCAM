@@ -10,7 +10,7 @@ let set_act_max = 36;
 const radio_btns = document.getElementsByName('options');
 const radio_btn_labels = document.getElementsByName('prediction_labels');
 const mainDisplayDiv = document.getElementById('mainDisplayDiv');
-
+const hint_text = document.getElementById('hint_text');
 
 var video;
 const orginVideoHeight = 1280;
@@ -148,6 +148,11 @@ function initCameraUI() {
   focus_offset_y = screenHeight * focus_center_y_p - focus_side_length/2;
   focusCnv.style.left = focus_offset_x;
   focusCnv.style.top = focus_offset_y;
+  console.log("focus_offset_y:" + focus_offset_y);
+  
+  // set hint text position
+  hint_text.style.top =  (focus_offset_y - 70) + 'px';
+  hint_text.innerHTML = 'please take a photo to recognise';
 
 }
 
@@ -337,6 +342,7 @@ async function classify() {
   console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
 
   drawSquare();
+  hint_text.innerHTML = "Emm, I think it is a, red areas are essential for my conclusion";
 }
 
 function drawSquare() {

@@ -34,6 +34,9 @@
     <script src="./js/tf.min.js.download"> </script>
     <script src="./js/util.js.download"> </script>
 
+    <!-- font awesome -->
+    <script src="https://kit.fontawesome.com/b4e219777e.js" crossorigin="anonymous"></script>
+
   </head>
 
   <body>
@@ -54,7 +57,7 @@
           <video id="video" autoplay playsinline></video>
         </div>
         <!-- hint for users -->
-        <p class="explain_text">please take a photo to recognise</p>
+        <p id="hint_text">...</p>
         <!-- snapshot button -->
         <button type="button" id="takePhotoButton" class="btn btn-success" onclick="takeSnapshot();">shot</button>
       </div>
@@ -81,7 +84,9 @@
         
         <div class="row h-50 m-0">
             <div class="col-3 align-self-center">
-              <button type="button" id="retakeButton" class="btn btn-success" onclick="retakePhoto();" >retake</button>
+              <button type="button" id="retakeButton" class="btn btn-light btn-block" onclick="retakePhoto();" >
+                <i class="fas fa-camera-retro"></i>
+              </button>
             </div>
             <div class="col-9 align-self-center">
               <input type="range" id="slider_actMax" class="slideBar" min="0" max="50" value="34" width="224" oninput="set_act_max=parseFloat(this.value); drawSquare();"> 

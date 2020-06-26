@@ -44,14 +44,9 @@ input[type=radio] {
   bottom: 0;
 }
 
-/* .container-fluid .slider .row .btn-group-toggle {
-  border-top-left-radius: 120px;
-  
-} */
 .btn-group .btn:first-child {
   border-radius: 20px 0 0 20px;
 }
-
 
 .btn-group .btn:last-child {
   border-radius: 0 20px 20px 0;
@@ -61,19 +56,6 @@ input[type=radio] {
   display:flex;
   justify-content:center;
   align-items:center;
-}
-
-
-.explain_text{
-  position: absolute;
-  top: 10%;
-  text-align: center;
-  font-size: large;
-  color: #00c0ff;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  z-index: 40;
 }
 
 .displayTakenPhoto{
@@ -86,7 +68,7 @@ input[type=radio] {
 .slider{
   overflow-y: hidden;
   position: absolute;
-  bottom: 0;
+  bottom: 1%;
   height: 25%;
   background-color: none;
   width: 100%;
@@ -105,6 +87,17 @@ input[type=radio] {
   text-align: center;
 }
 
+#hint_text{
+  position: absolute;
+  top: 10%;
+  text-align: center;
+  font-size: large;
+  color: #00c0ff;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 40;
+}
 
 #focusDiv{
   position: absolute;
@@ -139,6 +132,13 @@ input[type=radio] {
 
 #takePhotoButton:active {
   background-color: #fff;
+}
+
+#retakeButton {
+  border-radius: 90px;
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
 }
 
 #toggleFullScreenButton {
