@@ -9,6 +9,8 @@ let act_average;
 let act_max;
 let set_act_max = 36; 
 
+
+const mainDisplayDiv = document.getElementById('mainDisplayDiv');
 var video;
 var takePhotoButton;
 var toggleFullScreenButton;
@@ -194,7 +196,7 @@ function initCameraStream() {
   }
 }
 
-function takeSnapshot() {
+ async function takeSnapshot() {
   // if you'd like to show the canvas add it to the DOM
   var canvas = document.createElement('canvas');
 
@@ -202,45 +204,17 @@ function takeSnapshot() {
   canvas.height = videoHeight;
 
   canvas.className = 'displayTakenPhoto';
+  canvas.setAttribute("id", "takenPhoto");
+
   context = canvas.getContext('2d');
   context.drawImage(video, 0, 0, videoWidth, videoHeight);
-  // polyfil if needed https://github.com/blueimp/JavaScript-Canvas-to-Blob
-
-  // https://developers.google.com/web/fundamentals/primers/promises
-  // https://stackoverflow.com/questions/42458849/access-blob-value-outside-of-canvas-toblob-async-function
-  function getCanvasBlob(canvas) {
-    return new Promise(function (resolve, reject) {
-      canvas.toBlob(function (blob) {
-        resolve(blob);
-      }, 'image/jpeg');
-    });
-  }
-
-  // some API's (like Azure Custom Vision) need a blob with image data
-  getCanvasBlob(canvas).then(function (blob) {
-    // do something with the image blob
-
-    var newImg = document.createElement('img'),
-    url = URL.createObjectURL(blob);
-
-    newImg.setAttribute("id", "takenPhoto");
-
-    newImg.onload = function() {
-      // no longer need to read the blob so it's revoked
-      URL.revokeObjectURL(url);
-    };
-
-    newImg.src = url;
-
-    let mainContainer = document.getElementById('mainDisplayDiv');
-    mainContainer.appendChild(newImg);
-    newImg.className = 'displayTakenPhoto';
-  });
-  document.body.appendChild(canvas);
+  mainDisplayDiv.appendChild(canvas);
 
   stopVideoStream();
   document.getElementById('sliderDiv').className = 'slider';
   document.getElementById('takePhotoButton').style.visibility = "hidden";
+
+  await classify();
 }
 
 function retakePhoto(){
@@ -297,7 +271,7 @@ async function makeModel(ind) {
   });
 }
 
-async function rect(){
+function rect(){
 
   let canvas = document.createElement('canvas');
   let context = canvas.getContext('2d');
@@ -313,7 +287,7 @@ async function rect(){
 }
 
 async function classify() {
-  let imgData = await rect();
+  let imgData = rect();
   const batched = tf.tidy( () => {
     const image = tf.browser.fromPixels(imgData);
     const normalized = image.toFloat().mul(normConst).add(inpMin);
