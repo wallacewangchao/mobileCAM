@@ -103,7 +103,7 @@ body {
   overflow-y: hidden;
   position: absolute;
   bottom: 0;
-  height: 20%;
+  height: 25%;
   background-color: none;
   width: 100%;
   transition-property: all;
@@ -115,6 +115,13 @@ body {
 .slider.closed {
 	height: 0;
 }
+
+/* .predLabels{
+
+
+
+} */
+
 
 #focusDiv{
   position: absolute;
