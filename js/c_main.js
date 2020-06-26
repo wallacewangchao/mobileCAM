@@ -1,16 +1,17 @@
 //tensorflow parameters
 const inpMin = -1, inpMax = 1, normConst = (inpMax - inpMin)/255.0;
 const input_shape = 224, topK = 3;
-const radio_btns = document.getElementsByName('options');
-const radio_btn_labels = document.getElementsByName('prediction_labels');
 let modelReady = false;
 let act_data;
 let act_average;
 let act_max;
 let set_act_max = 36; 
 
-
+const radio_btns = document.getElementsByName('options');
+const radio_btn_labels = document.getElementsByName('prediction_labels');
 const mainDisplayDiv = document.getElementById('mainDisplayDiv');
+
+
 var video;
 var takePhotoButton;
 var toggleFullScreenButton;
@@ -272,7 +273,6 @@ async function makeModel(ind) {
 }
 
 function rect(){
-
   let canvas = document.createElement('canvas');
   let context = canvas.getContext('2d');
   let img = document.getElementById('takenPhoto');
@@ -297,15 +297,14 @@ async function classify() {
   const predictions = await getTopKClassesKeras(softmax, topK);
   
   let str = "I think it is a:";
-  // for(let i=0; i<topK; i++)
-  //   str += "\n" + predictions[i].probability.toFixed(3) + " - " + predictions[i].classInd +
-  //     " - " + predictions[i].className;
   // document.getElementById('output').innerText = str;
   
   //toggle buttons for classify objects
   for(let i = 0; i < radio_btns.length; i++) {
     radio_btns[i].value = predictions[i].classInd;
-    radio_btn_labels[i].innerText = predictions[i].className + " - " + (predictions[i].probability * 100).toFixed(1) + "%";
+    let className = predictions[i].className;
+    var firstName = className.split(',')[0];
+    radio_btn_labels[i].innerText = firstName + " - " + (predictions[i].probability * 100).toFixed(1) + "%";
   }
 
   let radio_btn_ind = check_radio_Index();
@@ -342,10 +341,8 @@ function drawSquare() {
     for (let j=0; j < 7; j++, k++){
       focusCtx.beginPath();
       focusCtx.rect([j]*m, [i]*m, m, m);
-      // let alpha = Math.max((1 - Math.exp(0.095*(act_data[k] - set_act_max))), 0);
       let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
       focusCtx.fillStyle = 'rgba(255, 0, 0  ,' + alpha + ')';
-      // out_ctx3.fillStyle = 'rgba(82, 97, 110  ,' + alpha + ')';
       focusCtx.fill();
     }
   }
