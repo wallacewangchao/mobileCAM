@@ -61,6 +61,10 @@ input[type=radio] {
   align-items:center;
 }
 
+/* .container-fluid .slider .row .col-3, .col-9 {
+  padding: 10px;
+} */
+
 .displayTakenPhoto{
   position: absolute;
   top: 0;
@@ -229,11 +233,9 @@ input[type=radio] {
 input[type="range"] {
   width: 300px;
   background: transparent;
-}
-
-input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
+
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -258,23 +260,26 @@ input[type="range"]::-webkit-slider-thumb {
   height: 36px;
   width: 36px;
   border-radius: 50%;
-  background: #555;
+  background: rgb(255, 87, 87);
   cursor: pointer;
+  outline: none;
   /* margin-top: 18px; */
 }
 
 input[type="range"]::-moz-range-thumb {
   height: 36px;
   width: 36px;
-  background: #555;
+  background: rgb(255, 87, 87);
   cursor: pointer;
+  outline: none;
 }
 
 input[type="range"]::-ms-thumb {
   height: 36px;
   width: 36px;
-  background: #555;
+  background: rgb(255, 87, 87);
   cursor: pointer;
+  outline: none;
 }
 /*#############Track##############*/
 
