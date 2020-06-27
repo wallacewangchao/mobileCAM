@@ -250,6 +250,7 @@ function stopVideoStream(){
 
 // CAM part
 const init = async () => {
+  takePhotoButton.disabled = true;
   await loadLayersModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json');
   console.log('model loaded');
 }
@@ -262,6 +263,8 @@ async function loadLayersModel(modelUrl) {
     }
   });
   console.log('model loaded ' + Math.round(performance.now() - ti) + ' ms');
+  hint_text.innerHTML = "Take a photo of an object<br>i will tell you what it is";
+  takePhotoButton.disabled = false;
 
   const layer = mobilenet.getLayer('conv_pw_13_relu');
   baseModel = tf.model({inputs: mobilenet.inputs, outputs: layer.output});
