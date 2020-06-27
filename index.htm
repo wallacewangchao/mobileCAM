@@ -67,15 +67,15 @@
 
         <div class="row h-50 m-0">
           <div class="btn-group-toggle btn-group btn-block" data-toggle="buttons" id = "toggle_btns" onchange="classify();">
-            <label class="btn btn-secondary active" name = "labels">
+            <label class="btn btn-outline-light active" name = "labels">
               <input type="radio" name="options" id="option1" checked >
               <div name="prediction_labels">prediction 1</div>              
             </label>
-            <label class="btn btn-secondary" name = "labels">
+            <label class="btn btn-outline-light" name = "labels">
               <input type="radio" name="options" id="option2"> 
               <div name="prediction_labels">prediction 1</div>
             </label>
-            <label class="btn btn-secondary" name = "labels">
+            <label class="btn btn-outline-light" name = "labels">
               <input type="radio" name="options" id="option3"> 
               <div name="prediction_labels">prediction 1</div>
             </label>
@@ -89,7 +89,8 @@
               </button>
             </div>
             <div class="col-9 align-self-center">
-              <input type="range" id="slider_actMax" class="slideBar" min="0" max="50" value="34" width="224" oninput="set_act_max=parseFloat(this.value); drawSquare();"> 
+              <input type="range" id="slider_actMax" class="slideBar" min="0" max="50" value="34" width="224" oninput="set_act_max=parseFloat(this.value); drawSquare();">
+              
             </div>
         </div>
 
