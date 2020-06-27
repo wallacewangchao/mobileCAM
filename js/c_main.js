@@ -357,7 +357,9 @@ function drawSquare() {
     for (let j=0; j < 7; j++, k++){
       focusCtx.beginPath();
       focusCtx.rect([j]*m, [i]*m, m, m);
+      // let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
       let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
+
       focusCtx.fillStyle = 'rgba(255, 0, 0  ,' + alpha + ')';
       focusCtx.fill();
     }
