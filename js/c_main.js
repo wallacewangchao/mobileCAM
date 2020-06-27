@@ -35,6 +35,7 @@ let screenHeight;
 let focus_offset_x;
 let focus_offset_y; 
 
+
 // this function counts the amount of video inputs
 function deviceCount() {
   return new Promise(function (resolve) {
@@ -152,7 +153,7 @@ function initCameraUI() {
   
   // set hint text position
   hint_text.style.top =  (focus_offset_y - 70) + 'px';
-  hint_text.innerHTML = 'please take a photo to recognise';
+  hint_text.innerHTML = 'Pleas take a photo of an object';
 
 }
 
@@ -236,6 +237,8 @@ function retakePhoto(){
   initCameraStream();  
   document.getElementById('takenPhoto').remove();
   document.getElementById('takePhotoButton').style.visibility = "visible";
+  hint_text.innerHTML = "Pleas take a photo of an object"
+  
 }
 
 function stopVideoStream(){
