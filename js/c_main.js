@@ -5,7 +5,7 @@ let modelReady = false;
 let act_data;
 let act_average;
 let act_max;
-let set_act_max = 36; 
+let set_act_max = 40; 
 
 const radio_btns = document.getElementsByName('options');
 const radio_btn_labels = document.getElementsByName('prediction_labels');
