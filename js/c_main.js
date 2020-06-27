@@ -11,10 +11,11 @@ const radio_btns = document.getElementsByName('options');
 const radio_btn_labels = document.getElementsByName('prediction_labels');
 const mainDisplayDiv = document.getElementById('mainDisplayDiv');
 const hint_text = document.getElementById('hint_text');
+const takePhotoButton = document.getElementById('takePhotoButton');
+
 
 var video;
 const orginVideoHeight = 1280;
-var takePhotoButton;
 var toggleFullScreenButton;
 var switchCameraButton;
 var amountOfCameras = 0;
@@ -113,7 +114,6 @@ document.addEventListener('DOMContentLoaded', function (event) {
 function initCameraUI() {
   video = document.getElementById('video');
 
-  takePhotoButton = document.getElementById('takePhotoButton');
   toggleFullScreenButton = document.getElementById('toggleFullScreenButton');
   switchCameraButton = document.getElementById('switchCameraButton');
 
@@ -153,7 +153,7 @@ function initCameraUI() {
   
   // set hint text position
   hint_text.style.top =  (focus_offset_y - 70) + 'px';
-  hint_text.innerHTML = 'Take a photo of an object <br> i will tell you what it is';
+  hint_text.innerHTML = 'Take a photo of an object<br>i will tell you what it is';
 
 }
 
@@ -211,11 +211,9 @@ function initCameraStream() {
 
   canvas.className = 'displayTakenPhoto';
   canvas.setAttribute("id", "takenPhoto");
-
   context = canvas.getContext('2d');
+
   // make canvas to draw cropped image of video according to the screen size. 
-  // s_x = orginVideoHeight/2 - screenWidth/2;
-  // s_y = orginVideoHeight/2 - screenHeight/2;
   let orginVideoWidth = orginVideoHeight;
   s_height = orginVideoHeight;
   s_width = s_height * screenWidth/screenHeight; 
@@ -226,7 +224,7 @@ function initCameraStream() {
 
   stopVideoStream();
   document.getElementById('sliderDiv').className = 'slider';
-  document.getElementById('takePhotoButton').style.visibility = "hidden";
+  takePhotoButton.style.visibility = "hidden";
 
   await classify();
 }
@@ -236,8 +234,8 @@ function retakePhoto(){
   document.getElementById('sliderDiv').className = 'slider closed';
   initCameraStream();  
   document.getElementById('takenPhoto').remove();
-  document.getElementById('takePhotoButton').style.visibility = "visible";
-  hint_text.innerHTML = "Take a photo of an object <br> i will tell you what it is"
+  takePhotoButton.style.visibility = "visible";
+  hint_text.innerHTML = "Take a photo of an object<br>i will tell you what it is"
   
 }
 
@@ -260,16 +258,15 @@ async function loadLayersModel(modelUrl) {
   let ti = performance.now();
   mobilenet = await tf.loadLayersModel(modelUrl, {
     onProgress: (fraction) => {
-      // document.getElementById('output').innerText = "loading progress " + fraction.toFixed(2);
+      hint_text.innerText = "loading model " + fraction.toFixed(2)*100 + "%";
     }
   });
   console.log('model loaded ' + Math.round(performance.now() - ti) + ' ms');
-  // document.getElementById('output').innerText = "Model is loaded!";
+
   const layer = mobilenet.getLayer('conv_pw_13_relu');
   baseModel = tf.model({inputs: mobilenet.inputs, outputs: layer.output});
 
   const layerPred = await mobilenet.getLayer('conv_preds');
-//  const weight985 = layerPred.getWeights()[0].slice([0,0,0,985],[1,1,-1,1]);
   weightsPred = layerPred.getWeights()[0];
   // makeModel(index);
 }
@@ -345,7 +342,7 @@ async function classify() {
   console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
 
   drawSquare();
-  hint_text.innerHTML = "Click tabs to see my conclusions, <br> red areas are the key to my judgement.";
+  hint_text.innerHTML = "Click tabs to see my conclusions<br>Red regions are my focuses";
 }
 
 function drawSquare() {

@@ -2,6 +2,9 @@ body {
   margin: 0px;
   padding: 0px;
   background: #000;  
+  width: 100%;
+  height: 100%;
+  position: fixed;
 }
 
 input[type=radio] {
@@ -109,8 +112,8 @@ input[type=radio] {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.5);
   z-index: 50;
+  font-size: 30px;
 }
 
 #takePhotoButton:active {
