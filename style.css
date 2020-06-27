@@ -95,7 +95,7 @@ input[type=radio] {
   top: 10%;
   text-align: center;
   font-size: large;
-  color: #00c0ff;
+  color: rgb(236, 236, 236);
   width: 100%;
   margin: 0;
   padding: 0;
@@ -106,11 +106,6 @@ input[type=radio] {
   position: absolute;
   border-radius: 20px;
   z-index: 200;
-}
-
-#slider_actMax{
-  width: 100%;
-  height: 25px;
 }
 
 #toggle_btns{
@@ -229,4 +224,102 @@ input[type=radio] {
     left: calc(50% - 32px);
     top: calc(82% - 32px);
   }
+}
+
+input[type="range"] {
+  width: 300px;
+  background: transparent;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+/*#############Thumb##############*/
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background: #555;
+  cursor: pointer;
+  /* margin-top: 18px; */
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 36px;
+  width: 36px;
+  background: #555;
+  cursor: pointer;
+}
+
+input[type="range"]::-ms-thumb {
+  height: 36px;
+  width: 36px;
+  background: #555;
+  cursor: pointer;
+}
+/*#############Track##############*/
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 36px;
+  border-radius: 50px;
+  cursor: pointer;
+  background: #ccc;
+}
+
+input[type="range"]:active::-webkit-slider-runnable-track {
+  background: #d6d6d6;
+}
+
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 36px;
+  border-radius: 50px;
+  cursor: pointer;
+  background: #ccc;
+}
+
+input[type="range"]::-ms-track {
+  width: 100%;
+  height: 36px;
+  border-radius: 50px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type="range"]::-ms-fill-lower {
+  background: #ccc;
+}
+
+input[type="range"]:focus::-ms-fill-lower {
+  background: #ddd;
+}
+
+input[type="range"]::-ms-fill-upper {
+  background: #ccc;
+}
+
+input[type="range"]:focus::-ms-fill-upper {
+  background: #ddd;
 }

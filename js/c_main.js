@@ -153,7 +153,7 @@ function initCameraUI() {
   
   // set hint text position
   hint_text.style.top =  (focus_offset_y - 70) + 'px';
-  hint_text.innerHTML = 'Pleas take a photo of an object';
+  hint_text.innerHTML = 'Take a photo of an object <br> i will tell you what it is';
 
 }
 
@@ -237,7 +237,7 @@ function retakePhoto(){
   initCameraStream();  
   document.getElementById('takenPhoto').remove();
   document.getElementById('takePhotoButton').style.visibility = "visible";
-  hint_text.innerHTML = "Pleas take a photo of an object"
+  hint_text.innerHTML = "Take a photo of an object <br> i will tell you what it is"
   
 }
 
@@ -345,7 +345,7 @@ async function classify() {
   console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
 
   drawSquare();
-  hint_text.innerHTML = "Emm, I think it is a, red areas are essential for my conclusion";
+  hint_text.innerHTML = "Click tabs to see my conclusions, <br> red areas are the key to my judgement.";
 }
 
 function drawSquare() {
