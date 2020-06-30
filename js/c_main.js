@@ -68,9 +68,10 @@ function deviceCount() {
 document.addEventListener('DOMContentLoaded', function (event) {
   // check if mediaDevices is supported
   if (
-      navigator.mediaDevices &&
-      navigator.mediaDevices.getUserMedia &&
-      navigator.mediaDevices.enumerateDevices
+      navigator.mediaDevices 
+      // &&
+      // navigator.mediaDevices.getUserMedia &&
+      // navigator.mediaDevices.enumerateDevices
   ) {
       // first we call getUserMedia to trigger permissions
       // we need this before deviceCount, otherwise Safari doesn't return all the cameras
