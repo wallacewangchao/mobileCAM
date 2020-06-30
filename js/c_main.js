@@ -5,7 +5,7 @@ let modelReady = false;
 let act_data;
 let act_average;
 let act_max;
-let set_act_max = 40; 
+let set_act_max = 50 - 40; //range max value - range default value  
 
 const radio_btns = document.getElementsByName('options');
 const radio_btn_labels = document.getElementsByName('prediction_labels');
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       });
   } else {
       alert(
-      'Mobile camera is not supported by browser, or there is no camera detected/connected',
+      'Mobile camera is not supported by browser, please use Safari or Chorme to open the page',
       );
   }
 
@@ -152,8 +152,8 @@ function initCameraUI() {
   console.log("focus_offset_y:" + focus_offset_y);
   
   // set hint text position
-  hint_text.style.top =  (focus_offset_y - 70) + 'px';
-  hint_text.innerHTML = 'Take a photo of an object<br>i will tell you what it is';
+  hint_text.style.top =  (focus_offset_y - 50) + 'px';
+  hint_text.innerHTML = 'Take a photo of an object<br>i will guess what it is';
 
 }
 
@@ -235,7 +235,7 @@ function retakePhoto(){
   initCameraStream();  
   document.getElementById('takenPhoto').remove();
   takePhotoButton.style.visibility = "visible";
-  hint_text.innerHTML = "Take a photo of an object<br>i will tell you what it is"
+  hint_text.innerHTML = "Take a photo of an object<br>i will guess what it is"
   
 }
 
@@ -252,7 +252,6 @@ function stopVideoStream(){
 const init = async () => {
   takePhotoButton.disabled = true;
   await loadLayersModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json');
-  console.log('model loaded');
 }
 
 async function loadLayersModel(modelUrl) {
@@ -263,7 +262,7 @@ async function loadLayersModel(modelUrl) {
     }
   });
   console.log('model loaded ' + Math.round(performance.now() - ti) + ' ms');
-  hint_text.innerHTML = "Take a photo of an object<br>i will tell you what it is";
+  hint_text.innerHTML = "Take a photo of an object<br>i will guess what it is";
   takePhotoButton.disabled = false;
 
   const layer = mobilenet.getLayer('conv_pw_13_relu');
@@ -293,8 +292,6 @@ function rect(){
   let img = document.getElementById('takenPhoto');
   canvas.width = focus_side_length;
   canvas.height = focus_side_length;
-  console.log(focus_offset_x);
-  console.log(focus_offset_y);
 
   context.drawImage(img, focus_offset_x, focus_offset_y, focus_side_length,focus_side_length, 0, 0, input_shape, input_shape);
   var imgData = context.getImageData(0, 0, input_shape, input_shape);
@@ -310,10 +307,7 @@ async function classify() {
   });
   const softmax = mobilenet.predict(batched);
   const predictions = await getTopKClassesKeras(softmax, topK);
-  
-  let str = "I think it is a:";
-  // document.getElementById('output').innerText = str;
-  
+    
   //toggle buttons for classify objects
   for(let i = 0; i < radio_btns.length; i++) {
     radio_btns[i].value = predictions[i].classInd;
@@ -340,16 +334,14 @@ async function classify() {
     // cacluate the max activation
     if(ma < di)  ma = di;
   }
-  act_max = ma;
-  act_average = sum/49;
-  console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
-
+  // act_max = ma;
+  // act_average = sum/49;
+  // console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
   drawSquare();
-  hint_text.innerHTML = "Click tabs to see my conclusions<br>Red regions are my focuses";
+  hint_text.innerHTML = "Click tabs to see my conclusions<br>Red areas are my focuses";
 }
 
 function drawSquare() {
-
   let k = 0;
   focusCtx.clearRect(0,0, focus_side_length,focus_side_length);
   let m = focus_side_length/7;
@@ -359,7 +351,6 @@ function drawSquare() {
       focusCtx.rect([j]*m, [i]*m, m, m);
       // let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
       let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
-
       focusCtx.fillStyle = 'rgba(255, 0, 0  ,' + alpha + ')';
       focusCtx.fill();
     }

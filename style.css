@@ -82,7 +82,8 @@ input[type=radio] {
   position: absolute;
   top: 10%;
   text-align: center;
-  font-size: large;
+  font-size: small;
+  font-family: 'MuseoModerno', cursive;
   color: rgb(236, 236, 236);
   width: 100%;
   margin: 0;
@@ -102,6 +103,8 @@ input[type=radio] {
   padding-top: 2px;
   padding-bottom: 2px;
   border-radius: 60px;
+  font-family: 'MuseoModerno', cursive;
+
 }
 
 
@@ -189,6 +192,7 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: rgb(255, 87, 87);
   cursor: pointer;
+  border-color: rgb(255, 87, 87);
   outline: none;
   /* margin-top: 18px; */
 }
@@ -197,6 +201,7 @@ input[type="range"]::-moz-range-thumb {
   height: 36px;
   width: 36px;
   background: rgb(255, 87, 87);
+  border-color: rgb(255, 87, 87);
   cursor: pointer;
   outline: none;
 }
@@ -205,6 +210,7 @@ input[type="range"]::-ms-thumb {
   height: 36px;
   width: 36px;
   background: rgb(255, 87, 87);
+  border-color: rgb(255, 87, 87);
   cursor: pointer;
   outline: none;
 }
