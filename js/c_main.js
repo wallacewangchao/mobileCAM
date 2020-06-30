@@ -170,7 +170,7 @@ function initCameraStream() {
       height: { ideal: orginVideoHeight },
       // width: { min: 0, ideal: window.innerWidth, max: 1920 },
       // height: { min: 0, ideal: window.innerHeight, max: 1080 },
-      facingMode: currentFacingMode,
+      facingMode: 'environment',
     },
   };
 
