@@ -12,6 +12,7 @@ const radio_btn_labels = document.getElementsByName('prediction_labels');
 const mainDisplayDiv = document.getElementById('mainDisplayDiv');
 const hint_text = document.getElementById('hint_text');
 const takePhotoButton = document.getElementById('takePhotoButton');
+const firstPageBtnsDiv = document.getElementById('firstPageBtnsDiv');
 
 
 var video;
@@ -103,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       });
   } else {
       alert(
-      'Mobile camera is not supported by browser, please use Safari or Chorme to open the page',
+      'Mobile camera is not supported by browser, please use Safari or Chrome to open the page',
       );
   }
 
@@ -224,7 +225,11 @@ function initCameraStream() {
 
   stopVideoStream();
   document.getElementById('sliderDiv').className = 'slider';
-  takePhotoButton.style.visibility = "hidden";
+  firstPageBtnsDiv.style.visibility = "hidden";
+
+  // sound feedback
+  var sndClick = new Howl({ src: ['snd/beep.mp3'] });
+  sndClick.play();
 
   await classify();
 }
@@ -234,7 +239,7 @@ function retakePhoto(){
   document.getElementById('sliderDiv').className = 'slider closed';
   initCameraStream();  
   document.getElementById('takenPhoto').remove();
-  takePhotoButton.style.visibility = "visible";
+  firstPageBtnsDiv.style.visibility = "visible";
   hint_text.innerHTML = "Take a photo of an object<br>i will guess what it is"
   
 }

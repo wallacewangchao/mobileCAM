@@ -60,15 +60,29 @@
         </div>
         <!-- hint for users -->
         <p id="hint_text">...</p>
-        <!-- snapshot button -->
-        <button type="button" id="takePhotoButton" class="btn btn-light" onclick="takeSnapshot();">
-          <i class="fas fa-camera"></i>
-        </button>
+
+      </div>
+
+      <div class="row h-25 m-0 p-0 fixed-bottom " id="firstPageBtnsDiv" >
+        <div class="col-4 d-flex justify-content-center align-items-center">
+
+
+        </div>
+        <div class="col-4 d-flex justify-content-center align-items-center">
+          <!-- snapshot button -->
+          <button type="button" id="takePhotoButton" class="btn btn-light" onclick="takeSnapshot();">
+            <i class="fas fa-camera"></i>
+          </button>
+        </div>
+        <div class="col-4 d-flex justify-content-center align-items-center">
+          <button type="button" id="infoButton" class="btn btn-light" data-toggle="modal" data-target="#about_CAM">
+            <i class="fas fa-info"></i>
+          </button>
+        </div>
       </div>
 
       <!-- slider of prediction result -->
       <div class="slider closed" id="sliderDiv">
-
         <div class="row h-50 m-0">
           <div class="btn-group-toggle btn-group btn-block" data-toggle="buttons" id = "toggle_btns" onchange="classify();">
             <label class="btn btn-outline-light active" name = "labels">
@@ -99,6 +113,33 @@
 
       </div>
     </div>
+
+  <!-- Modal for information -->
+  <div class="modal fade" id="about_CAM" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">How AI thinks?</h5>
+        </div>
+        <div class="modal-body">
+          <p>A class activation map for a particular category indicates the discriminative image regions used by the CNN to identify that category.</p> 
+          <p>More information can be found in  
+            <a href="http://cnnlocalization.csail.mit.edu/">this paper</a>
+          </p>
+          <p>This website is made by 
+            <a href="https://chaoswang.wordpress.com/">Chao Wang</a>
+            based on the framework of 
+            <a href="https://www.ibiblio.org/e-notes/ml/notes.htm">TensorFlow.js notes</a> provided by 
+            <a href="https://twitter.com/EvgenyDemidov">Evgeny Demidov</a>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
     <script src="js/adapter.min.js"></script>
     <script src="js/screenfull.min.js"></script>

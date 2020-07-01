@@ -104,19 +104,23 @@ input[type=radio] {
   padding-bottom: 2px;
   border-radius: 60px;
   font-family: 'MuseoModerno', cursive;
-
 }
 
 
 #takePhotoButton {
-  position: absolute;
-  left: calc(50% - 40px);
-  bottom: 5%;
   width: 80px;
   height: 80px;
   border-radius: 50%;
   z-index: 50;
   font-size: 30px;
+}
+
+#infoButton{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  z-index: 50;
+  font-size: 20px;
 }
 
 #takePhotoButton:active {
