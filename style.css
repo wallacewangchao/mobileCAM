@@ -31,6 +31,19 @@ input[type=radio] {
   -webkit-overflow-scrolling: touch;
 }
 
+btn:focus, a:focus
+{
+  outline: none !important;
+  box-shadow: none !important;;
+
+}
+.navbar-toggler:focus
+{
+  outline: none !important;
+  box-shadow: none;
+}
+
+
 .btn-group .btn:first-child {
   border-radius: 20px 0 0 20px;
 }
@@ -45,10 +58,6 @@ input[type=radio] {
   align-items:center;
 }
 
-/* .container-fluid .slider .row .col-3, .col-9 {
-  padding: 10px;
-} */
-
 .displayTakenPhoto{
   position: absolute;
   top: 0;
@@ -59,7 +68,7 @@ input[type=radio] {
 .slider{
   overflow-y: hidden;
   position: absolute;
-  bottom: 1%;
+  bottom: 0;
   height: 25%;
   background-color: none;
   width: 100%;
@@ -121,6 +130,7 @@ input[type=radio] {
   border-radius: 50%;
   z-index: 50;
   font-size: 20px;
+  box-shadow: none !important;
 }
 
 #takePhotoButton:active {
