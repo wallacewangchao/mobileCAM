@@ -37,6 +37,9 @@ let screenHeight;
 let focus_offset_x;
 let focus_offset_y; 
 
+document.addEventListener('gesturestart', function (e) {
+  e.preventDefault();
+});
 
 // this function counts the amount of video inputs
 function deviceCount() {
