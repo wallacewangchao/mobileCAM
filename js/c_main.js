@@ -157,7 +157,7 @@ function initCameraUI() {
   
   // set hint text position
   hint_text.style.top =  (focus_offset_y - 50) + 'px';
-  hint_text.innerHTML = 'Take a photo of an object<br>i will guess what it is';
+  hint_text.innerHTML = 'Take a photo of an object';
 
 }
 
@@ -243,7 +243,7 @@ function retakePhoto(){
   initCameraStream();  
   document.getElementById('takenPhoto').remove();
   firstPageBtnsDiv.style.visibility = "visible";
-  hint_text.innerHTML = "Take a photo of an object<br>i will guess what it is"
+  hint_text.innerHTML = "Take a photo of an object"
   
 }
 
@@ -270,7 +270,7 @@ async function loadLayersModel(modelUrl) {
     }
   });
   console.log('model loaded ' + Math.round(performance.now() - ti) + ' ms');
-  hint_text.innerHTML = "Take a photo of an object<br>i will guess what it is";
+  hint_text.innerHTML = "Take a photo of an object";
   takePhotoButton.disabled = false;
 
   const layer = mobilenet.getLayer('conv_pw_13_relu');
@@ -346,7 +346,7 @@ async function classify() {
   // act_average = sum/49;
   // console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
   drawSquare();
-  hint_text.innerHTML = "Click tabs to see my conclusions<br>Red areas are my focuses";
+  hint_text.innerHTML = "Red areas are AI's focus";
 }
 
 function drawSquare() {
