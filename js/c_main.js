@@ -156,7 +156,7 @@ function initCameraUI() {
   console.log("focus_offset_y:" + focus_offset_y);
   
   // set hint text position
-  hint_text.style.top =  (focus_offset_y - 50) + 'px';
+  hint_text.style.top =  (focus_offset_y - 30) + 'px';
   hint_text.innerHTML = 'Take a photo of an object';
 
 }
@@ -266,7 +266,7 @@ async function loadLayersModel(modelUrl) {
   let ti = performance.now();
   mobilenet = await tf.loadLayersModel(modelUrl, {
     onProgress: (fraction) => {
-      hint_text.innerText = "loading model " + fraction.toFixed(2)*100 + "%";
+      hint_text.innerText = "loading model " + (fraction*100).toFixed(1) + "%";
     }
   });
   console.log('model loaded ' + Math.round(performance.now() - ti) + ' ms');

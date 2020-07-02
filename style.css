@@ -89,7 +89,7 @@ btn:focus, a:focus
 
 #hint_text{
   position: absolute;
-  top: 10%;
+  top: 15%;
   text-align: center;
   font-size: small;
   font-family: 'MuseoModerno', cursive;
@@ -141,7 +141,7 @@ btn:focus, a:focus
   border-radius: 90px;
   width: 60px;
   height: 60px;
-  font-size: 30px;
+  font-size: 24px;
 }
 
 #retakeButton:active {
