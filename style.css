@@ -130,7 +130,7 @@ btn:focus, a:focus
   border-radius: 50%;
   z-index: 50;
   font-size: 20px;
-  box-shadow: none !important;
+  /* box-shadow: none !important; */
 }
 
 #takePhotoButton:active {
