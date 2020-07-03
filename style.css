@@ -35,7 +35,6 @@ btn:focus, a:focus
 {
   outline: none !important;
   box-shadow: none !important;;
-
 }
 .navbar-toggler:focus
 {
@@ -115,7 +114,6 @@ btn:focus, a:focus
   font-family: 'MuseoModerno', cursive;
 }
 
-
 #takePhotoButton {
   width: 80px;
   height: 80px;
@@ -130,10 +128,12 @@ btn:focus, a:focus
   border-radius: 50%;
   z-index: 50;
   font-size: 20px;
-  /* box-shadow: none !important; */
+  box-shadow: none !important;
 }
 
-#takePhotoButton:active {
+#takePhotoButton:active, 
+#infoButton:active, 
+#retakeButton:active {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -142,11 +142,7 @@ btn:focus, a:focus
   width: 60px;
   height: 60px;
   font-size: 24px;
-}
-
-#retakeButton:active {
-  background-color: rgba(255, 255, 255, 0.5);
-}
+} 
 
 #toggleFullScreenButton {
   display: none;
