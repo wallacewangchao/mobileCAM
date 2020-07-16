@@ -36,6 +36,54 @@ btn:focus, a:focus
   outline: none !important;
   box-shadow: none !important;;
 }
+
+
+#modeSwitch{
+	height: 0;
+	width: 0;
+	visibility: hidden;
+}
+
+#switchLabel {
+	cursor: pointer;
+	text-indent: -9999px;
+	width: 60px;
+	height: 34px;
+	background: grey;
+	display: block;
+	border-radius: 100px;
+  position: relative;
+}
+
+#switchLabel:after {
+	content: '';
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	width: 26px;
+	height: 26px;
+	background: #fff;
+	border-radius: 26px;
+  transition: 0.3s;
+}
+
+#modeSwitch:checked + label {
+	background: #bada55;
+}
+
+#modeSwitch:checked + label:after {
+	left: calc(100% - 4px);
+	transform: translateX(-100%);
+}
+
+#switchLabel:active:after {
+	width: 36px;
+}
+#switchLabel{
+  margin-bottom: 0mm;
+}
+
+
 .navbar-toggler:focus
 {
   outline: none !important;
@@ -86,6 +134,12 @@ btn:focus, a:focus
   text-align: center;
 }
 
+#touchCnv{
+  position: absolute;
+  border-radius: 20px;
+  z-index: 220;
+}
+
 #hint_text{
   position: absolute;
   top: 15%;
@@ -133,7 +187,8 @@ btn:focus, a:focus
 
 #takePhotoButton:active, 
 #infoButton:active, 
-#retakeButton:active {
+#retakeButton:active,
+#compareBtn:active {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -144,31 +199,14 @@ btn:focus, a:focus
   font-size: 24px;
 } 
 
-#toggleFullScreenButton {
-  display: none;
-  width: 64px;
-  height: 64px;
-  background-image: url('img/ic_fullscreen_white_48px.svg');
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.5);
+#compareBtn{
+  border-radius: 90px;
+  height: 40px;
+  font-size: large;
+  font-family: 'MuseoModerno', cursive;
+  box-shadow: none !important;
 }
 
-#toggleFullScreenButton[aria-pressed='true'] {
-  background-image: url('img/ic_fullscreen_exit_white_48px.svg');
-}
-
-#switchCameraButton {
-  display: none;
-  width: 64px;
-  height: 64px;
-  background-image: url('img/ic_camera_rear_white_36px.svg');
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-#switchCameraButton[aria-pressed='true'] {
-  background-image: url('img/ic_camera_front_white_36px.svg');
-}
 
 input[type="range"] {
   width: 300px;

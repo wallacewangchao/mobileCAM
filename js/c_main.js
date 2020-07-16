@@ -13,7 +13,11 @@ const mainDisplayDiv = document.getElementById('mainDisplayDiv');
 const hint_text = document.getElementById('hint_text');
 const takePhotoButton = document.getElementById('takePhotoButton');
 const firstPageBtnsDiv = document.getElementById('firstPageBtnsDiv');
-
+const modeSwitch = document.getElementById('modeSwitch');
+const compareBtn = document.getElementById('compareBtn');
+const slider_actMax = document.getElementById('slider_actMax');
+const touch_Cnv = document.getElementById('touchCnv');
+const touch_Ctx = touch_Cnv.getContext('2d');
 
 var video;
 const orginVideoHeight = 1280;
@@ -111,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
       );
   }
 
-  init();
+  load_model();
 
 });
 
@@ -144,15 +148,9 @@ function initCameraUI() {
   focus_rect.setAttribute("transform", t_val);
 
   // set canvas of activation vis location
-  
-  focusCnv.width = focus_side_length;
-  focusCnv.height = focus_side_length;
-  focusCnv.style.position = 'absolute';
-
   focus_offset_x = screenWidth * focus_center_x_p - focus_side_length/2;
   focus_offset_y = screenHeight * focus_center_y_p - focus_side_length/2;
-  focusCnv.style.left = focus_offset_x;
-  focusCnv.style.top = focus_offset_y;
+  setFocusCanvasPos(focusCnv);
   console.log("focus_offset_y:" + focus_offset_y);
   
   // set hint text position
@@ -233,6 +231,15 @@ function initCameraStream() {
   // sound feedback
   var sndClick = new Howl({ src: ['snd/beep.mp3'] });
   sndClick.play();
+  // checke video button
+  if(modeSwitch.checked){
+    compareBtn.style.display = "";
+    slider_actMax.style.display = "none";
+    createTouchListener();
+  }else{
+    compareBtn.style.display = "none";
+    slider_actMax.style.display = "";
+  }
 
   await classify();
 }
@@ -257,7 +264,7 @@ function stopVideoStream(){
 }
 
 // CAM part
-const init = async () => {
+const load_model = async () => {
   takePhotoButton.disabled = true;
   await loadLayersModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json');
 }
@@ -345,7 +352,10 @@ async function classify() {
   // act_max = ma;
   // act_average = sum/49;
   // console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
-  drawSquare();
+  if(!modeSwitch.checked){
+    drawSquare();
+  }
+
   hint_text.innerHTML = "Red areas are AI's focus";
 }
 
@@ -372,4 +382,65 @@ function check_radio_Index(){
       return i;
     }
   }
+}
+
+function compare(){
+  drawSquare();
+}
+
+function createTouchListener(){
+  setFocusCanvasPos(touch_Cnv);
+  touch_Cnv.style.className = 'touchCnv';
+
+  touch_Cnv.addEventListener('touchstart', function(e){
+    // touchDraw(touch_Ctx, e.changedTouches[0].clientX - focus_offset_x, e.changedTouches[0].clientY - focus_offset_y);
+    touchDrawRect(touch_Cnv, e.changedTouches[0].clientX - focus_offset_x, e.changedTouches[0].clientY - focus_offset_y);
+  });
+  
+  touch_Cnv.addEventListener('touchmove', function(e){
+    e.preventDefault();
+    // touchDraw(touch_Ctx, e.changedTouches[0].clientX - focus_offset_x, e.changedTouches[0].clientY -focus_offset_y);
+  });
+
+}
+
+function createDrawCnvs(cnvIndex){
+  let canvas = document.createElement('canvas');
+  setFocusCanvasPos(canvas);
+  canvas.setAttribute("id", cnvIndex);
+  let context = canvas.getContext('2d');
+}
+
+touchDraw = function(context, x, y){
+  context.beginPath();
+  context.fillStyle = '#ff8330';
+  context.arc(x, y, 30, 0, 2 * Math.PI);
+  context.fill();
+  context.closePath();
+};
+
+function touchDrawRect(canvas, x, y){
+  context = canvas.getContext('2d');
+  let m = focus_side_length/7;
+  let i = parseInt(x/m);
+  let j = parseInt(y/m);
+
+  // console.log("x:", x , " y:", y);
+  // console.log("i:", i , " j:", j);
+  // console.log("m:", m);
+  
+  context.beginPath();
+  context.fillStyle = '#bada55';
+  // context.arc(i*m + m/2, j*m + m/2, m, 0, 2 * Math.PI);
+  context.rect(i*m+4, j*m+4, m-8, m-8);
+  context.fill();
+  context.closePath();
+}
+
+function setFocusCanvasPos(canvas){
+  canvas.height = focus_side_length;
+  canvas.width = focus_side_length;
+  canvas.style.left = focus_offset_x;
+  canvas.style.top = focus_offset_y;
+  canvas.style.position = "absolute";
 }

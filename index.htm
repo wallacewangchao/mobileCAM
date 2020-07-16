@@ -19,7 +19,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'UA-168006878-2');
     </script>
 
@@ -34,8 +33,6 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <!-- Material Design Bootstrap -->
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.0/css/mdb.min.css" rel="stylesheet"> -->
 
     <!-- JQuery -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -57,6 +54,7 @@
     <div class="container-fluid m-0 p-0">
       <div class="row h-100 m-0 p-0">
         <div class="col-12 m-0 p-0 bg-secondary" id="mainDisplayDiv">
+          <canvas id="touchCnv"></canvas>
           <canvas id="focusDiv"></canvas>
           <svg width="100%" height="100%" id="svg_cover">
             <defs>
@@ -77,7 +75,8 @@
 
       <div class="row h-25 m-0 p-0 fixed-bottom " id="firstPageBtnsDiv" >
         <div class="col-4 d-flex justify-content-center align-items-center">
-
+          <input type="checkbox" id="modeSwitch"/>
+          <label id="switchLabel" for="modeSwitch">Toggle</label>
         </div>
         <div class="col-4 d-flex justify-content-center align-items-center">
           <!-- snapshot button -->
@@ -92,7 +91,7 @@
         </div>
       </div>
 
-      <!-- slider of prediction result -->
+      <!-- div of prediction result -->
       <div class="slider closed" id="sliderDiv">
         <div class="row h-50 m-0">
           <div class="btn-group-toggle btn-group btn-block" data-toggle="buttons" id = "toggle_btns" onchange="classify();">
@@ -110,7 +109,7 @@
             </label>
           </div>
         </div>
-        
+        <!-- operation buttons -->
         <div class="row h-50 m-0">
             <div class="col-3 align-self-center">
               <button type="button" id="retakeButton" class="btn btn-light btn-block" onclick="retakePhoto();" >
@@ -119,6 +118,9 @@
             </div>
             <div class="col-9 align-self-center">
               <input type="range" id="slider_actMax" class="slideBar" min="0" max="50" value="40" width="224" oninput="set_act_max= 50 - parseFloat(this.value); drawSquare();">
+              <button type="button" id="compareBtn" class="btn btn-light btn-block" onclick="compare();"> 
+                compare
+              </button>
             </div>
         </div>
 
