@@ -6,6 +6,7 @@ let act_data;
 let act_average;
 let act_max;
 let set_act_max = 50 - 40; //range max value - range default value  
+const arrSum = arr => arr.reduce((a,b) => a + b, 0)
 
 const radio_btns = document.getElementsByName('options');
 const radio_btn_labels = document.getElementsByName('prediction_labels');
@@ -18,13 +19,15 @@ const compareBtn = document.getElementById('compareBtn');
 const slider_actMax = document.getElementById('slider_actMax');
 const touch_Cnv = document.getElementById('touchCnv');
 const touch_Ctx = touch_Cnv.getContext('2d');
+const one_preResult = document.getElementById('one_preResult');
+const toggle_btns = document.getElementById('toggle_btns');
 
-var video;
+let video;
 const orginVideoHeight = 1280;
-var toggleFullScreenButton;
-var switchCameraButton;
-var amountOfCameras = 0;
-var currentFacingMode = 'environment';
+let toggleFullScreenButton;
+let switchCameraButton;
+let amountOfCameras = 0;
+let currentFacingMode = 'environment';
 
 // focus area side length 
 let focus_side_length;
@@ -236,9 +239,13 @@ function initCameraStream() {
     compareBtn.style.display = "";
     slider_actMax.style.display = "none";
     createTouchListener();
+    set_act_max = 50;
+    touchedDraw_val.fill(0);
+    actDraw_val.fill(0);
   }else{
     compareBtn.style.display = "none";
     slider_actMax.style.display = "";
+    set_act_max = 50 - 40;
   }
 
   await classify();
@@ -251,7 +258,8 @@ function retakePhoto(){
   document.getElementById('takenPhoto').remove();
   firstPageBtnsDiv.style.visibility = "visible";
   hint_text.innerHTML = "Take a photo of an object"
-  
+  touch_Ctx.clearRect(0, 0, focus_side_length, focus_side_length);
+
 }
 
 function stopVideoStream(){
@@ -322,42 +330,42 @@ async function classify() {
   });
   const softmax = mobilenet.predict(batched);
   const predictions = await getTopKClassesKeras(softmax, topK);
-    
+  
+  let target_pred;
   //toggle buttons for classify objects
-  for(let i = 0; i < radio_btns.length; i++) {
-    radio_btns[i].value = predictions[i].classInd;
-    let className = predictions[i].className;
-    var firstName = className.split(',')[0];
-    radio_btn_labels[i].innerText = firstName + " - " + (predictions[i].probability * 100).toFixed(1) + "%";
+  if(!modeSwitch.checked){
+    toggle_btns.style.display = "";
+    one_preResult.style.display = "none";
+    for(let i = 0; i < radio_btns.length; i++) {
+      radio_btns[i].value = predictions[i].classInd;
+      let className = predictions[i].className;
+      let firstName = className.split(',')[0];
+      radio_btn_labels[i].innerText = firstName + " - " + (predictions[i].probability * 100).toFixed(1) + "%";
+    }
+    target_pred = check_radio_Index();
+  } 
+  else{
+    toggle_btns.style.display = "none";
+    one_preResult.style.display = "";
+    let className = predictions[0].className;
+    one_preResult.innerHTML  = className + " <br/> " + (predictions[0].probability * 100).toFixed(1) + "%"
+    target_pred = 0;
   }
 
-  let radio_btn_ind = check_radio_Index();
-  makeModel(predictions[radio_btn_ind].classInd);
-
+  makeModel(predictions[target_pred].classInd);
   const basePredict = baseModel.predict(batched);
   const predicted = model.predict(basePredict);
   act_data = predicted.dataSync();
-
   basePredict.dispose();
   predicted.dispose();
-  let ma = act_data[0], sum = ma;
-  // cacluate the max activation and average activation 
-  for(let i = 1; i < 49; i++ ){
-    let di = act_data[i];
-    sum += di;
-
-    // cacluate the max activation
-    if(ma < di)  ma = di;
-  }
-  // act_max = ma;
-  // act_average = sum/49;
-  // console.log("max= " + act_max.toFixed(2) + ", av= " + act_average.toFixed(2));
   if(!modeSwitch.checked){
     drawSquare();
   }
 
   hint_text.innerHTML = "Red areas are AI's focus";
 }
+
+let actDraw_val = new Array(49);
 
 function drawSquare() {
   let k = 0;
@@ -368,12 +376,15 @@ function drawSquare() {
       focusCtx.beginPath();
       focusCtx.rect([j]*m, [i]*m, m, m);
       // let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
-      let alpha = Math.max((1 - Math.exp(0.035*(-act_data[k] + set_act_max))), 0);
+      let alpha = Math.max((1 - Math.exp(0.035*(set_act_max - act_data[k]))), 0);
       focusCtx.fillStyle = 'rgba(255, 0, 0  ,' + alpha + ')';
       focusCtx.fill();
+      actDraw_val[k] = alpha; 
     }
   }
   console.log("set_act_max: " + set_act_max);
+  console.log("actDraw_val: " + actDraw_val);
+
 }
 
 function check_radio_Index(){
@@ -385,15 +396,28 @@ function check_radio_Index(){
 }
 
 function compare(){
-  drawSquare();
+  let oneShot = setInterval(iteration, 30);
+  function iteration(){
+    let sum_touched_val = arrSum(touchedDraw_val);
+    let sum_act_val = arrSum(actDraw_val);
+    console.log("sum_touched_val: " + sum_touched_val + "   sum_act_val: " + sum_act_val);
+    if((sum_act_val <= sum_touched_val) && (set_act_max >=0)){
+      set_act_max -= 1;
+      drawSquare();
+      // let myVar = setInterval(drawSquare, 300);
+    }else{
+      clearInterval(oneShot);
+      console.log("interation completed" );
+    }
+  }
 }
+
 
 function createTouchListener(){
   setFocusCanvasPos(touch_Cnv);
   touch_Cnv.style.className = 'touchCnv';
 
   touch_Cnv.addEventListener('touchstart', function(e){
-    // touchDraw(touch_Ctx, e.changedTouches[0].clientX - focus_offset_x, e.changedTouches[0].clientY - focus_offset_y);
     touchDrawRect(touch_Cnv, e.changedTouches[0].clientX - focus_offset_x, e.changedTouches[0].clientY - focus_offset_y);
   });
   
@@ -404,21 +428,15 @@ function createTouchListener(){
 
 }
 
-function createDrawCnvs(cnvIndex){
-  let canvas = document.createElement('canvas');
-  setFocusCanvasPos(canvas);
-  canvas.setAttribute("id", cnvIndex);
-  let context = canvas.getContext('2d');
-}
+// touchDraw = function(context, x, y){
+//   context.beginPath();
+//   context.fillStyle = '#ff8330';
+//   context.arc(x, y, 30, 0, 2 * Math.PI);
+//   context.fill();
+//   context.closePath();
+// };
 
-touchDraw = function(context, x, y){
-  context.beginPath();
-  context.fillStyle = '#ff8330';
-  context.arc(x, y, 30, 0, 2 * Math.PI);
-  context.fill();
-  context.closePath();
-};
-
+let touchedDraw_val = new Array(49).fill(0);
 function touchDrawRect(canvas, x, y){
   context = canvas.getContext('2d');
   let m = focus_side_length/7;
@@ -428,13 +446,16 @@ function touchDrawRect(canvas, x, y){
   // console.log("x:", x , " y:", y);
   // console.log("i:", i , " j:", j);
   // console.log("m:", m);
-  
+
   context.beginPath();
-  context.fillStyle = '#bada55';
+  context.fillStyle = 'rgba(0,240,255,0.1)';
   // context.arc(i*m + m/2, j*m + m/2, m, 0, 2 * Math.PI);
-  context.rect(i*m+4, j*m+4, m-8, m-8);
+  context.rect(i*m+2, j*m+2, m-4, m-4);
   context.fill();
   context.closePath();
+
+  touchedDraw_val[j*7 + i] += 0.1;
+  // console.log("touchedDraw_val: " + touchedDraw_val);
 }
 
 function setFocusCanvasPos(canvas){

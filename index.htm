@@ -93,7 +93,8 @@
 
       <!-- div of prediction result -->
       <div class="slider closed" id="sliderDiv">
-        <div class="row h-50 m-0">
+        <div class="row h-50 m-0 justify-content-center">
+          <div class="col-11" id="one_preResult">recognising</div>
           <div class="btn-group-toggle btn-group btn-block" data-toggle="buttons" id = "toggle_btns" onchange="classify();">
             <label class="btn btn-outline-light active" name = "labels">
               <input type="radio" name="options" id="option1" checked >
@@ -118,7 +119,7 @@
             </div>
             <div class="col-9 align-self-center">
               <input type="range" id="slider_actMax" class="slideBar" min="0" max="50" value="40" width="224" oninput="set_act_max= 50 - parseFloat(this.value); drawSquare();">
-              <button type="button" id="compareBtn" class="btn btn-light btn-block" onclick="compare();"> 
+              <button type="button" id="compareBtn" class="btn btn-light btn-block" onclick=" compare();"> 
                 compare
               </button>
             </div>
