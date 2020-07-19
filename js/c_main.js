@@ -7,6 +7,8 @@ let act_average;
 let act_max;
 let set_act_max = 50 - 40; //range max value - range default value  
 const arrSum = arr => arr.reduce((a,b) => a + b, 0)
+let actDraw_val = new Array(49);
+let touchedDraw_val = new Array(49).fill(0);
 
 const radio_btns = document.getElementsByName('options');
 const radio_btn_labels = document.getElementsByName('prediction_labels');
@@ -43,6 +45,8 @@ let screenHeight;
 
 let focus_offset_x;
 let focus_offset_y; 
+
+let myTouchDraw;
 
 document.addEventListener('gesturestart', function (e) {
   e.preventDefault();
@@ -160,6 +164,7 @@ function initCameraUI() {
   hint_text.style.top =  (focus_offset_y - 30) + 'px';
   hint_text.innerHTML = 'Take a photo of an object';
 
+  myTouchDraw = new touchDrawRect(touch_Ctx);
 }
 
 function initCameraStream() {
@@ -260,6 +265,7 @@ function retakePhoto(){
   hint_text.innerHTML = "Take a photo of an object"
   touch_Ctx.clearRect(0, 0, focus_side_length, focus_side_length);
 
+  removeTouchListener();
 }
 
 function stopVideoStream(){
@@ -365,8 +371,6 @@ async function classify() {
   hint_text.innerHTML = "Red areas are AI's focus";
 }
 
-let actDraw_val = new Array(49);
-
 function drawSquare() {
   let k = 0;
   focusCtx.clearRect(0,0, focus_side_length,focus_side_length);
@@ -396,7 +400,7 @@ function check_radio_Index(){
 }
 
 
-// TODO: lock compare buttons, after wards show similarity score
+// TODO: lock compare buttons, afterwards show similarity score
 
 function compare(){
   let oneShot = setInterval(iteration, 30);
@@ -415,82 +419,62 @@ function compare(){
   }
 }
 
+// function createTouchListener(){
+//   setFocusCanvasPos(touch_Cnv);
+//   touch_Cnv.style.className = 'touchCnv';
+  
+//   touch_Cnv.addEventListener('touchstart', function(e){
+//     e.preventDefault();
+//     let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
+//     let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
+//     myTouchDraw.draw(corrected_x, corrected_y);
+//   });
+  
+//   touch_Cnv.addEventListener('touchmove', function(e){
+//     e.preventDefault();
+//     let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
+//     let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
+//     myTouchDraw.draw(corrected_x, corrected_y);
+//   });
+
+//   touch_Cnv.addEventListener('touchend', function(e){
+//     e.preventDefault();
+//     myTouchDraw.touchEnd_update();
+//   });
+// }
 
 function createTouchListener(){
   setFocusCanvasPos(touch_Cnv);
   touch_Cnv.style.className = 'touchCnv';
-  let touch_draw = new touchDrawRect(touch_Cnv);
   
-  touch_Cnv.addEventListener('touchstart', function(e){
-    // e.preventDefault();
-    let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
-    let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
-    
-    // touchDrawRect(touch_Cnv, correct_x, correct_y);
-    touch_draw.touchMove_Draw(corrected_x, corrected_y);
-  });
+  touch_Cnv.addEventListener('touchstart', touchingEventHandler);
   
-  // TODO: set interval to small number
-  touch_Cnv.addEventListener('touchmove', function(e){
-    e.preventDefault();
-    let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
-    let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
-    // console.log("pre_pos: " + pre_pos);
-    // touchMove_Draw(touch_Cnv, correct_x, correct_y);
-    touch_draw.touchMove_Draw(corrected_x, corrected_y);
-  });
+  touch_Cnv.addEventListener('touchmove', touchingEventHandler);
+
+  touch_Cnv.addEventListener('touchend', endtouchEventHandler);
+}
+
+function removeTouchListener(){
+
+  touch_Cnv.removeEventListener('touchstart', touchingEventHandler);
+  
+  touch_Cnv.removeEventListener('touchmove', touchingEventHandler);
+
+  touch_Cnv.removeEventListener('touchend', endtouchEventHandler);
 
 }
 
-// function cal_grid_pos(x, y){
-//   let pos = [2];
-//   let m = focus_side_length/7;
-//   let i = parseInt(x/m);
-//   let j = parseInt(y/m);
-//   return pos;
-// }
+function touchingEventHandler(e){
+  e.preventDefault();
+  let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
+  let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
+  myTouchDraw.draw(corrected_x, corrected_y);
+}
 
-let touchedDraw_val = new Array(49).fill(0);
-// function touchMove_Draw(canvas, x, y, pre_pos){
-//   context = canvas.getContext('2d');
-//   let m = focus_side_length/7;
-//   let i = parseInt(x/m);
-//   let j = parseInt(y/m);
-//   // console.log("x:", x , " y:", y);
-//   // console.log("i:", i , " j:", j);
-//   // console.log("m:", m);
-//   if(i != grid_pos[0] || j != grid_pos[1]){
-//     context.beginPath();
-//     context.fillStyle = 'rgba(0,240,255,0.1)';
-//     context.rect(i*m+2, j*m+2, m-4, m-4);
-//     context.fill();
-//     context.closePath();
-//     touchedDraw_val[j*7 + i] += 0.1;
-//     // console.log("touchedDraw_val: " + touchedDraw_val);
-//     current_pos[0] = i;
-//     current_pos[1] = j;
-//   }
-// }
-
-// function touchDrawRect(canvas, x, y){
-//   context = canvas.getContext('2d');
-//   let m = focus_side_length/7;
-//   let i = parseInt(x/m);
-//   let j = parseInt(y/m);
-//   let current_pos = [];
-//   current_pos[0] = i;
-//   current_pos[1] = j;
-
-//   context.beginPath();
-//   context.fillStyle = 'rgba(0,240,255,0.1)';
-//   // context.arc(i*m + m/2, j*m + m/2, m, 0, 2 * Math.PI);
-//   context.rect(i*m+2, j*m+2, m-4, m-4);
-//   context.fill();
-//   context.closePath();
-
-//   touchedDraw_val[j*7 + i] += 0.1;
-//   // console.log("touchedDraw_val: " + touchedDraw_val);
-// }
+function endtouchEventHandler(e){
+  e.preventDefault();
+  myTouchDraw.touchEnd_update();
+}
 
 function setFocusCanvasPos(canvas){
   canvas.height = focus_side_length;
@@ -500,11 +484,10 @@ function setFocusCanvasPos(canvas){
   canvas.style.position = "absolute";
 }
 
-
 class touchDrawRect{
-  constructor(canvas){
-    context = canvas.getContext('2d');
-    this.pre_grid = [2];
+  constructor(context){
+    this.context = context;
+    this.pre_grid = [-1,-1];
     this.m = focus_side_length/7;
   }
 
@@ -515,16 +498,23 @@ class touchDrawRect{
     return grid_pos;
   }
 
-  touchMove_Draw(x, y){
+  // touch_event(e){
+  //   e.preventDefault();
+  //   let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
+  //   let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
+  //   this.draw(corrected_x, corrected_y);
+  // }
+
+  draw(x, y){
     let i = this.cal_grid_pos(x, y)[0];
     let j = this.cal_grid_pos(x, y)[1];
 
     if(i != this.pre_grid[0] || j != this.pre_grid[1]){
-      context.beginPath();
-      context.fillStyle = 'rgba(0,240,255,0.1)';
-      context.rect(i*this.m+2, j*this.m+2, this.m-4, this.m-4);
-      context.fill();
-      context.closePath();
+      this.context.beginPath();
+      this.context.fillStyle = 'rgba(0,240,255,0.1)';
+      this.context.rect(i*this.m+2, j*this.m+2, this.m-4, this.m-4);
+      this.context.fill();
+      this.context.closePath();
       touchedDraw_val[j*7 + i] += 0.1;
       // console.log("touchedDraw_val: " + touchedDraw_val);
       this.pre_grid[0] = i;
@@ -532,4 +522,12 @@ class touchDrawRect{
     }
   }
 
+  // touchEnd_event(e){
+  //   e.preventDefault();
+  //   this.pre_grid  = [-1,-1];
+  // }
+
+  touchEnd_update(){
+    this.pre_grid  = [-1,-1];
+  }
 }
