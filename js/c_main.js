@@ -395,6 +395,9 @@ function check_radio_Index(){
   }
 }
 
+
+// TODO: lock compare buttons, after wards show similarity score
+
 function compare(){
   let oneShot = setInterval(iteration, 30);
   function iteration(){
@@ -423,7 +426,7 @@ function createTouchListener(){
   
   touch_Cnv.addEventListener('touchmove', function(e){
     e.preventDefault();
-    // touchDraw(touch_Ctx, e.changedTouches[0].clientX - focus_offset_x, e.changedTouches[0].clientY -focus_offset_y);
+    touchDrawRect(touch_Cnv, e.changedTouches[0].clientX - focus_offset_x, e.changedTouches[0].clientY - focus_offset_y);
   });
 
 }
