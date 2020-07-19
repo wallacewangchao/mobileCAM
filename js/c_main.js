@@ -419,47 +419,78 @@ function compare(){
 function createTouchListener(){
   setFocusCanvasPos(touch_Cnv);
   touch_Cnv.style.className = 'touchCnv';
-
+  let touch_draw = new touchDrawRect(touch_Cnv);
+  
   touch_Cnv.addEventListener('touchstart', function(e){
-    touchDrawRect(touch_Cnv, e.changedTouches[0].clientX - focus_offset_x, e.changedTouches[0].clientY - focus_offset_y);
+    // e.preventDefault();
+    let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
+    let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
+    
+    // touchDrawRect(touch_Cnv, correct_x, correct_y);
+    touch_draw.touchMove_Draw(corrected_x, corrected_y);
   });
   
+  // TODO: set interval to small number
   touch_Cnv.addEventListener('touchmove', function(e){
     e.preventDefault();
-    touchDrawRect(touch_Cnv, e.changedTouches[0].clientX - focus_offset_x, e.changedTouches[0].clientY - focus_offset_y);
+    let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
+    let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
+    // console.log("pre_pos: " + pre_pos);
+    // touchMove_Draw(touch_Cnv, correct_x, correct_y);
+    touch_draw.touchMove_Draw(corrected_x, corrected_y);
   });
 
 }
 
-// touchDraw = function(context, x, y){
-//   context.beginPath();
-//   context.fillStyle = '#ff8330';
-//   context.arc(x, y, 30, 0, 2 * Math.PI);
-//   context.fill();
-//   context.closePath();
-// };
+// function cal_grid_pos(x, y){
+//   let pos = [2];
+//   let m = focus_side_length/7;
+//   let i = parseInt(x/m);
+//   let j = parseInt(y/m);
+//   return pos;
+// }
 
 let touchedDraw_val = new Array(49).fill(0);
-function touchDrawRect(canvas, x, y){
-  context = canvas.getContext('2d');
-  let m = focus_side_length/7;
-  let i = parseInt(x/m);
-  let j = parseInt(y/m);
+// function touchMove_Draw(canvas, x, y, pre_pos){
+//   context = canvas.getContext('2d');
+//   let m = focus_side_length/7;
+//   let i = parseInt(x/m);
+//   let j = parseInt(y/m);
+//   // console.log("x:", x , " y:", y);
+//   // console.log("i:", i , " j:", j);
+//   // console.log("m:", m);
+//   if(i != grid_pos[0] || j != grid_pos[1]){
+//     context.beginPath();
+//     context.fillStyle = 'rgba(0,240,255,0.1)';
+//     context.rect(i*m+2, j*m+2, m-4, m-4);
+//     context.fill();
+//     context.closePath();
+//     touchedDraw_val[j*7 + i] += 0.1;
+//     // console.log("touchedDraw_val: " + touchedDraw_val);
+//     current_pos[0] = i;
+//     current_pos[1] = j;
+//   }
+// }
 
-  // console.log("x:", x , " y:", y);
-  // console.log("i:", i , " j:", j);
-  // console.log("m:", m);
+// function touchDrawRect(canvas, x, y){
+//   context = canvas.getContext('2d');
+//   let m = focus_side_length/7;
+//   let i = parseInt(x/m);
+//   let j = parseInt(y/m);
+//   let current_pos = [];
+//   current_pos[0] = i;
+//   current_pos[1] = j;
 
-  context.beginPath();
-  context.fillStyle = 'rgba(0,240,255,0.1)';
-  // context.arc(i*m + m/2, j*m + m/2, m, 0, 2 * Math.PI);
-  context.rect(i*m+2, j*m+2, m-4, m-4);
-  context.fill();
-  context.closePath();
+//   context.beginPath();
+//   context.fillStyle = 'rgba(0,240,255,0.1)';
+//   // context.arc(i*m + m/2, j*m + m/2, m, 0, 2 * Math.PI);
+//   context.rect(i*m+2, j*m+2, m-4, m-4);
+//   context.fill();
+//   context.closePath();
 
-  touchedDraw_val[j*7 + i] += 0.1;
-  // console.log("touchedDraw_val: " + touchedDraw_val);
-}
+//   touchedDraw_val[j*7 + i] += 0.1;
+//   // console.log("touchedDraw_val: " + touchedDraw_val);
+// }
 
 function setFocusCanvasPos(canvas){
   canvas.height = focus_side_length;
@@ -467,4 +498,38 @@ function setFocusCanvasPos(canvas){
   canvas.style.left = focus_offset_x;
   canvas.style.top = focus_offset_y;
   canvas.style.position = "absolute";
+}
+
+
+class touchDrawRect{
+  constructor(canvas){
+    context = canvas.getContext('2d');
+    this.pre_grid = [2];
+    this.m = focus_side_length/7;
+  }
+
+  cal_grid_pos(x, y){
+    let grid_pos = [2];
+    grid_pos[0] = parseInt(x/this.m);
+    grid_pos[1] = parseInt(y/this.m);
+    return grid_pos;
+  }
+
+  touchMove_Draw(x, y){
+    let i = this.cal_grid_pos(x, y)[0];
+    let j = this.cal_grid_pos(x, y)[1];
+
+    if(i != this.pre_grid[0] || j != this.pre_grid[1]){
+      context.beginPath();
+      context.fillStyle = 'rgba(0,240,255,0.1)';
+      context.rect(i*this.m+2, j*this.m+2, this.m-4, this.m-4);
+      context.fill();
+      context.closePath();
+      touchedDraw_val[j*7 + i] += 0.1;
+      // console.log("touchedDraw_val: " + touchedDraw_val);
+      this.pre_grid[0] = i;
+      this.pre_grid[1] = j;
+    }
+  }
+
 }
