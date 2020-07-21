@@ -242,6 +242,9 @@ function initCameraStream() {
   // checke video button
   if(modeSwitch.checked){
     compareBtn.style.display = "";
+    compareBtn.innerHTML = 'compare';
+    compareBtn.disabled = false;
+
     slider_actMax.style.display = "none";
     createTouchListener();
     set_act_max = 50;
@@ -386,8 +389,8 @@ function drawSquare() {
       actDraw_val[k] = alpha; 
     }
   }
-  console.log("set_act_max: " + set_act_max);
-  console.log("actDraw_val: " + actDraw_val);
+  // console.log("set_act_max: " + set_act_max);
+  // console.log("actDraw_val: " + actDraw_val);
 
 }
 
@@ -401,67 +404,58 @@ function check_radio_Index(){
 
 
 // TODO: lock compare buttons, afterwards show similarity score
-
+// TODO: adding compare sound effect
+// TODO: shorten time interval when act_val is 0
 function compare(){
   let oneShot = setInterval(iteration, 30);
   function iteration(){
+    compareBtn.disabled = true;
+
     let sum_touched_val = arrSum(touchedDraw_val);
     let sum_act_val = arrSum(actDraw_val);
-    console.log("sum_touched_val: " + sum_touched_val + "   sum_act_val: " + sum_act_val);
+    // console.log("sum_touched_val: " + sum_touched_val + "   sum_act_val: " + sum_act_val);
+
     if((sum_act_val <= sum_touched_val) && (set_act_max >=0)){
       set_act_max -= 1;
       drawSquare();
-      // let myVar = setInterval(drawSquare, 300);
+      compareBtn.innerHTML = "Your Score:  " + cal_score(sum_act_val);
     }else{
       clearInterval(oneShot);
+      // ) :( :D :* :'( :/ O:) :P :O &) ^_^ >:O :3 >:( 8| O.o -_- 3:) <3 :V :|] (^^^) <(")
+      compareBtn.innerHTML = "Your Score:  " + cal_score(sum_act_val) + "&nbsp &nbspO.o";
       console.log("interation completed" );
     }
   }
 }
 
-// function createTouchListener(){
-//   setFocusCanvasPos(touch_Cnv);
-//   touch_Cnv.style.className = 'touchCnv';
-  
-//   touch_Cnv.addEventListener('touchstart', function(e){
-//     e.preventDefault();
-//     let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
-//     let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
-//     myTouchDraw.draw(corrected_x, corrected_y);
-//   });
-  
-//   touch_Cnv.addEventListener('touchmove', function(e){
-//     e.preventDefault();
-//     let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
-//     let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
-//     myTouchDraw.draw(corrected_x, corrected_y);
-//   });
-
-//   touch_Cnv.addEventListener('touchend', function(e){
-//     e.preventDefault();
-//     myTouchDraw.touchEnd_update();
-//   });
-// }
+function cal_score(sum_touched_val){
+  let sum_d = 0;
+  let p;
+  for(let i=0; i<49; i++){
+    sum_d += Math.abs(touchedDraw_val[i] - actDraw_val[i]);
+  }
+  if (sum_touched_val === 0){
+    p = 0
+  }else{
+    p = 1 - sum_d / sum_touched_val;
+  }
+  let score = parseInt(p * 100);
+  return score;
+}
 
 function createTouchListener(){
   setFocusCanvasPos(touch_Cnv);
   touch_Cnv.style.className = 'touchCnv';
   
   touch_Cnv.addEventListener('touchstart', touchingEventHandler);
-  
   touch_Cnv.addEventListener('touchmove', touchingEventHandler);
-
   touch_Cnv.addEventListener('touchend', endtouchEventHandler);
 }
 
 function removeTouchListener(){
-
   touch_Cnv.removeEventListener('touchstart', touchingEventHandler);
-  
   touch_Cnv.removeEventListener('touchmove', touchingEventHandler);
-
   touch_Cnv.removeEventListener('touchend', endtouchEventHandler);
-
 }
 
 function touchingEventHandler(e){
@@ -498,13 +492,6 @@ class touchDrawRect{
     return grid_pos;
   }
 
-  // touch_event(e){
-  //   e.preventDefault();
-  //   let corrected_x = e.changedTouches[0].clientX - focus_offset_x;
-  //   let corrected_y = e.changedTouches[0].clientY - focus_offset_y;
-  //   this.draw(corrected_x, corrected_y);
-  // }
-
   draw(x, y){
     let i = this.cal_grid_pos(x, y)[0];
     let j = this.cal_grid_pos(x, y)[1];
@@ -521,11 +508,6 @@ class touchDrawRect{
       this.pre_grid[1] = j;
     }
   }
-
-  // touchEnd_event(e){
-  //   e.preventDefault();
-  //   this.pre_grid  = [-1,-1];
-  // }
 
   touchEnd_update(){
     this.pre_grid  = [-1,-1];
