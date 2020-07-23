@@ -418,17 +418,17 @@ function compare(){
     if((sum_act_val <= sum_touched_val) && (set_act_max >=0)){
       set_act_max -= 1;
       drawSquare();
-      compareBtn.innerHTML = "Your Score:  " + cal_score(sum_act_val);
+      compareBtn.innerHTML = "Your Score:  " + cal_score(sum_act_val,sum_act_val);
     }else{
       clearInterval(oneShot);
-      // ) :( :D :* :'( :/ O:) :P :O &) ^_^ >:O :3 >:( 8| O.o -_- 3:) <3 :V :|] (^^^) <(")
-      compareBtn.innerHTML = "Your Score:  " + cal_score(sum_act_val) + "&nbsp &nbspO.o";
+      // ) :( :D :* :'( :/ O:) :P :O &) ^_^ >:O :3 >:( 8| O.o -_- 3:) <3 :V :|] (^^^) <(")  ༼ʘ̚ل͜ʘ̚༽ ⚆ _ ⚆
+      compareBtn.innerHTML = "Your Score:  " + cal_score(sum_act_val,sum_act_val) + "&nbsp &nbsp ^_^";
       console.log("interation completed" );
     }
   }
 }
 
-function cal_score(sum_touched_val){
+function cal_score(sum_touched_val, sum_act_val){
   let sum_d = 0;
   let p;
   for(let i=0; i<49; i++){
@@ -437,7 +437,7 @@ function cal_score(sum_touched_val){
   if (sum_touched_val === 0){
     p = 0
   }else{
-    p = 1 - sum_d / sum_touched_val;
+    p = 1 - sum_d / (sum_touched_val + sum_act_val);
   }
   let score = parseInt(p * 100);
   return score;
