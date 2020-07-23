@@ -23,6 +23,7 @@ const touch_Cnv = document.getElementById('touchCnv');
 const touch_Ctx = touch_Cnv.getContext('2d');
 const one_preResult = document.getElementById('one_preResult');
 const toggle_btns = document.getElementById('toggle_btns');
+const retakeButton = document.getElementById('retakeButton');
 
 let video;
 const orginVideoHeight = 1280;
@@ -234,7 +235,8 @@ function initCameraStream() {
 
   stopVideoStream();
   document.getElementById('sliderDiv').className = 'slider';
-  firstPageBtnsDiv.style.visibility = "hidden";
+  firstPageBtnsDiv.style.display = "none";
+
 
   // sound feedback
   var sndClick = new Howl({ src: ['snd/beep.mp3'] });
@@ -244,7 +246,7 @@ function initCameraStream() {
     compareBtn.style.display = "";
     compareBtn.innerHTML = 'compare';
     compareBtn.disabled = false;
-
+    hint_text.innerText = 'please scribble the the areas that AI focuses'
     slider_actMax.style.display = "none";
     createTouchListener();
     set_act_max = 50;
@@ -252,6 +254,7 @@ function initCameraStream() {
     actDraw_val.fill(0);
   }else{
     compareBtn.style.display = "none";
+    hint_text.innerHTML = "Red areas are AI's focus";
     slider_actMax.style.display = "";
     set_act_max = 50 - 40;
   }
@@ -264,7 +267,7 @@ function retakePhoto(){
   document.getElementById('sliderDiv').className = 'slider closed';
   initCameraStream();  
   document.getElementById('takenPhoto').remove();
-  firstPageBtnsDiv.style.visibility = "visible";
+  firstPageBtnsDiv.style.display = "";
   hint_text.innerHTML = "Take a photo of an object"
   touch_Ctx.clearRect(0, 0, focus_side_length, focus_side_length);
 
@@ -371,7 +374,6 @@ async function classify() {
     drawSquare();
   }
 
-  hint_text.innerHTML = "Red areas are AI's focus";
 }
 
 function drawSquare() {
@@ -403,14 +405,15 @@ function check_radio_Index(){
 }
 
 
-// TODO: lock compare buttons, afterwards show similarity score
 // TODO: adding compare sound effect
 // TODO: shorten time interval when act_val is 0
 function compare(){
   let oneShot = setInterval(iteration, 30);
   function iteration(){
     compareBtn.disabled = true;
-
+    retakeButton.disabled = true;
+    hint_text.innerText = 'check the your score!'
+    removeTouchListener();
     let sum_touched_val = arrSum(touchedDraw_val);
     let sum_act_val = arrSum(actDraw_val);
     // console.log("sum_touched_val: " + sum_touched_val + "   sum_act_val: " + sum_act_val);
@@ -422,8 +425,19 @@ function compare(){
     }else{
       clearInterval(oneShot);
       // ) :( :D :* :'( :/ O:) :P :O &) ^_^ >:O :3 >:( 8| O.o -_- 3:) <3 :V :|] (^^^) <(")  ༼ʘ̚ل͜ʘ̚༽ ⚆ _ ⚆
-      compareBtn.innerHTML = "Your Score:  " + cal_score(sum_act_val,sum_act_val) + "&nbsp &nbsp ^_^";
-      console.log("interation completed" );
+      let final_score = cal_score(sum_act_val,sum_act_val);
+      let emoji;
+      if(final_score < 10){
+        emoji = '^_^';
+      }
+      else if(final_score >= 10 && final_score < 35){
+        emoji = '°_°';
+
+      }else{
+        emoji = "°O°";
+      }
+      compareBtn.innerHTML = "Your Score:  " + final_score + "&nbsp &nbsp" + emoji;
+      retakeButton.disabled = false;
     }
   }
 }

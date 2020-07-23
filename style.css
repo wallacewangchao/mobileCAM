@@ -64,11 +64,11 @@ btn:focus, a:focus
 	height: 26px;
 	background: #fff;
 	border-radius: 26px;
-  transition: 0.3s;
+  transition: 0.4s;
 }
 
 #modeSwitch:checked + label {
-	background: #bada55;
+	background: #00d9ff;
 }
 
 #modeSwitch:checked + label:after {
@@ -83,6 +83,12 @@ btn:focus, a:focus
   margin-bottom: 0mm;
 }
 
+.fas.fa-eye-slash{
+  position: absolute;
+  left: calc(50% - 23px);
+  pointer-events:none;
+  color: white;
+}
 
 .navbar-toggler:focus
 {
