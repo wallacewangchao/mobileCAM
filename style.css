@@ -85,7 +85,8 @@ btn:focus, a:focus
 
 .fas.fa-eye-slash{
   position: absolute;
-  left: calc(50% - 23px);
+  left: calc(50% - 22px);
+  font-size: small;
   pointer-events:none;
   color: white;
 }
