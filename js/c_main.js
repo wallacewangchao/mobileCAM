@@ -246,7 +246,7 @@ function initCameraStream() {
     compareBtn.style.display = "";
     compareBtn.innerHTML = 'compare';
     compareBtn.disabled = false;
-    hint_text.innerText = 'please scribble the the areas that AI focuses'
+    hint_text.innerText = 'please scribble the areas that AI focuses'
     slider_actMax.style.display = "none";
     createTouchListener();
     set_act_max = 50;
@@ -412,7 +412,7 @@ function compare(){
   function iteration(){
     compareBtn.disabled = true;
     retakeButton.disabled = true;
-    hint_text.innerText = 'check the your score!'
+    hint_text.innerText = 'check your score!'
     removeTouchListener();
     let sum_touched_val = arrSum(touchedDraw_val);
     let sum_act_val = arrSum(actDraw_val);
