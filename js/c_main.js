@@ -26,7 +26,7 @@ const toggle_btns = document.getElementById('toggle_btns');
 const retakeButton = document.getElementById('retakeButton');
 
 let video;
-const orginVideoHeight = 1280;
+const orginVideoHeight = 1920;
 let toggleFullScreenButton;
 let switchCameraButton;
 let amountOfCameras = 0;
@@ -205,7 +205,7 @@ function initCameraStream() {
     const track = window.stream.getVideoTracks()[0];
     const settings = track.getSettings();
     str = JSON.stringify(settings, null, 4);
-    console.log('settings ' + str);
+    // console.log('settings ' + str);
   }
 
   function handleError(error) {

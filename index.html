@@ -32,7 +32,6 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@300;400;500&display=swap" rel="stylesheet">
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> -->
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -132,37 +131,38 @@
       </div>
     </div>
 
-  <!-- Modal for information -->
-  <div class="modal fade" id="about_CAM" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">What is on AI's mind?</h5>
-        </div>
-        <div class="modal-body">
-          <p>How does AI recognize an object? Try to take a photo of any object you like, and compare if you and AI focus on the same area to identify it.
-            <br>
-          </p>
+    <!-- information page -->
+    <div class="modal fade" id="about_CAM" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">What is on AI's mind?</h5>
+          </div>
+          <div class="modal-body">
+            <p>How does AI recognize an object? Try to take a photo of any object you like, and compare if you and AI focus on the same area to identify it.
+              <br>
+            </p>
 
-          <img class="img-fluid"
-          src="./img/image.jpg">
-          
-          <p>
-            <br>
-            This app is made by 
-            <a href="https://www.linkedin.com/in/chao-wang-259b052b/">Chao Wang</a> based on a technique called Class Activation Map, which can visualise the attention of Convolutional Neural Network to identify an object. More information can be found in  
-            <a href="http://cnnlocalization.csail.mit.edu/">this paper</a>
-            <br>
-            The MobileNet surgery part is based on Evgeny Demidov's 
-            <a href="https://www.ibiblio.org/e-notes/ml/webgl/heat_daisy.htm">CNN Heat Maps</a>
-          </p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <img class="img-fluid"
+            src="./img/image.jpg">
+            
+            <p>
+              <br>
+              This app is made by 
+              <a href="https://www.linkedin.com/in/chao-wang-259b052b/">Chao Wang</a> based on a technique called Class Activation Map, which can visualise the attention of Convolutional Neural Network to identify an object. More information can be found in  
+              <a href="http://cnnlocalization.csail.mit.edu/">this paper</a>
+              <br>
+              The MobileNet surgery part is based on Evgeny Demidov's 
+              <a href="https://www.ibiblio.org/e-notes/ml/webgl/heat_daisy.htm">CNN Heat Maps</a>
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+
     <script src="js/adapter.min.js"></script>
     <script src="js/screenfull.min.js"></script>
     <script src="js/howler.core.min.js"></script>
