@@ -172,10 +172,10 @@ function initCameraStream() {
   var constraints = {
     audio: false,
     video: {
-      // width: { ideal: screenHeight },
-      // height: { ideal: screenHeight },
-      width: { min: 0, ideal: window.innerWidth, max: 1920 },
-      height: { min: 0, ideal: window.innerHeight, max: 1080 },
+      width: { ideal: window.innerHeight },
+      height: { ideal: window.innerHeight },
+      // width: { min: 0, ideal: window.innerWidth, max: 1920 },
+      // height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: 'environment',
     },
   };
@@ -200,7 +200,7 @@ function initCameraStream() {
   }
 }
 
- async function takeSnapshot() {
+async function takeSnapshot() {
   // if you'd like to show the canvas add it to the DOM
   var canvas = document.createElement('canvas');
 
@@ -212,6 +212,7 @@ function initCameraStream() {
   context = canvas.getContext('2d');
 
   // make canvas to draw cropped image of video according to the screen size. 
+  orginVideoHeight = window.innerHeight;
   let orginVideoWidth = orginVideoHeight;
   s_height = orginVideoHeight;
   s_width = s_height * screenWidth/screenHeight; 
