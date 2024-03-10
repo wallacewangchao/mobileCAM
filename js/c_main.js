@@ -213,18 +213,11 @@ async function takeSnapshot() {
   context = canvas.getContext('2d');
 
   // make canvas to draw cropped image of video according to the screen size. 
-  // let orginVideoWidth = orginVideoHeight;
-  // s_height = orginVideoHeight;
-  // s_width = s_height * screenWidth/screenHeight; 
-  // s_x = orginVideoWidth/2 - s_width/2
-
-  // let longEdge = Math.max(video.videoWidth, video.videoHeight);
-
   s_height = video.videoHeight;
   s_width = s_height * (screenWidth/screenHeight); 
   s_x = (video.videoWidth - s_width)/2
   s_y = (video.videoHeight - s_height)/2
-  context.drawImage(video, s_x, 0, video.videoHeight * (screenWidth/screenHeight), s_height, 0, 0, screenWidth, screenHeight);
+  context.drawImage(video, s_x, s_y, s_width, s_height, 0, 0, screenWidth, screenHeight);
 
   mainDisplayDiv.appendChild(canvas);
 
