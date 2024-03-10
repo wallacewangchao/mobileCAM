@@ -127,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 function initCameraUI() {
   video = document.getElementById('video');
-  video.style.position = "absolute";
 
   // set camera focus rect size and position
   screenWidth = video.offsetWidth;
