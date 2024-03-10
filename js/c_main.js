@@ -169,11 +169,12 @@ function initCameraStream() {
 
   // we ask for a square resolution, it will cropped on top (landscape)
   // or cropped at the sides (landscape)
+  orginVideoHeight = window.innerWidth
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: window.innerHeight },
-      height: { ideal: window.innerHeight },
+      width: { ideal: orginVideoHeight },
+      height: { ideal: orginVideoHeight },
       // width: { min: 0, ideal: window.innerWidth, max: 1920 },
       // height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: 'environment',
@@ -212,7 +213,6 @@ async function takeSnapshot() {
   context = canvas.getContext('2d');
 
   // make canvas to draw cropped image of video according to the screen size. 
-  orginVideoHeight = window.innerHeight;
   let orginVideoWidth = orginVideoHeight;
   s_height = orginVideoHeight;
   s_width = s_height * screenWidth/screenHeight; 
