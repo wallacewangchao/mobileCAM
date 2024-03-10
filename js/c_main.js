@@ -172,8 +172,8 @@ function initCameraStream() {
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: window.innerWidth },
-      height: { ideal: window.innerHeight },
+      width: { ideal: screenWidth },
+      height: { ideal: screenHeight },
       // aspectRatio: window.innerWidth/window.innerHeight,
       // width: { min: 0, ideal: window.innerWidth, max: 1920 },
       // height: { min: 0, ideal: window.innerHeight, max: 1080 },
