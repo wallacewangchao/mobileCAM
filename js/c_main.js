@@ -218,13 +218,15 @@ async function takeSnapshot() {
   // s_width = s_height * screenWidth/screenHeight; 
   // s_x = orginVideoWidth/2 - s_width/2
 
+  // let longEdge = Math.max(video.videoWidth, video.videoHeight);
+
   s_x = (video.videoWidth - screenWidth)/2
   s_y = (video.videoHeight - screenHeight)/2
 
   console.log(video.videoWidth)
   console.log(video.videoHeight)
 
-  context.drawImage(video, s_x, s_y, screenWidth, screenHeight, 0, 0, screenWidth, screenHeight);
+  context.drawImage(video, s_x, 0, video.videoWidth * (screenWidth/screenHeight), video.videoHeight, 0, 0, screenWidth, screenHeight);
   // context.drawImage(video, 0, 0, canvas.width, canvas.height);
   // context.drawImage(video, 0, 0);
 
