@@ -55,19 +55,19 @@
   <body>
     <div class="container-fluid m-0 p-0">
       <div class="row h-100 m-0 p-0">
+        <canvas id="touchCnv"></canvas>
+        <canvas id="focusDiv"></canvas>
+        <svg width="100%" height="100%" id="svg_cover">
+          <defs>
+            <mask id="hole">
+              <rect width="100%" height="100%" fill="white"/>
+              <rect rx="20" ry="20" id = "focus_rect"/>
+            </mask>
+          </defs>
+          <rect id="donut" width="100%" height="100%" fill="rgba(0, 0, 0, 0.6)" mask="url(#hole)" />
+        </svg>
+        
         <div class="col-12 m-0 p-0 bg-secondary" id="mainDisplayDiv">
-          <canvas id="touchCnv"></canvas>
-          <canvas id="focusDiv"></canvas>
-          <svg width="100%" height="100%" id="svg_cover">
-            <defs>
-              <mask id="hole">
-                <rect width="100%" height="100%" fill="white"/>
-                <rect rx="20" ry="20" id = "focus_rect"/>
-              </mask>
-            </defs>
-            <rect id="donut" width="100%" height="100%" fill="rgba(0, 0, 0, 0.6)" mask="url(#hole)" />
-          </svg>
-
           <video id="video" autoplay playsinline></video>
         </div>
         <!-- hint for users -->
