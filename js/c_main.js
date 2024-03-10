@@ -26,7 +26,7 @@ const toggle_btns = document.getElementById('toggle_btns');
 const retakeButton = document.getElementById('retakeButton');
 
 let video;
-let orginVideoHeight = 1280;
+let orginVideoHeight = 3000;
 let amountOfCameras = 0;
 let currentFacingMode = 'environment';
 
