@@ -26,9 +26,7 @@ const toggle_btns = document.getElementById('toggle_btns');
 const retakeButton = document.getElementById('retakeButton');
 
 let video;
-const orginVideoHeight = 1920;
-let toggleFullScreenButton;
-let switchCameraButton;
+let orginVideoHeight = 1280;
 let amountOfCameras = 0;
 let currentFacingMode = 'environment';
 
@@ -130,9 +128,6 @@ document.addEventListener('DOMContentLoaded', function (event) {
 function initCameraUI() {
   video = document.getElementById('video');
 
-  toggleFullScreenButton = document.getElementById('toggleFullScreenButton');
-  switchCameraButton = document.getElementById('switchCameraButton');
-
   // set camera focus rect size and position
   screenWidth = video.offsetWidth;
   screenHeight = video.offsetHeight;
@@ -177,10 +172,10 @@ function initCameraStream() {
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: orginVideoHeight },
-      height: { ideal: orginVideoHeight },
-      // width: { min: 0, ideal: window.innerWidth, max: 1920 },
-      // height: { min: 0, ideal: window.innerHeight, max: 1080 },
+      // width: { ideal: screenHeight },
+      // height: { ideal: screenHeight },
+      width: { min: 0, ideal: window.innerWidth, max: 1920 },
+      height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: 'environment',
     },
   };
@@ -193,14 +188,6 @@ function initCameraStream() {
   function handleSuccess(stream) {
     window.stream = stream; // make stream available to browser console
     video.srcObject = stream;
-
-    // if (constraints.video.facingMode) {
-    //   if (constraints.video.facingMode === 'environment') {
-    //     switchCameraButton.setAttribute('aria-pressed', true);
-    //   } else {
-    //     switchCameraButton.setAttribute('aria-pressed', false);
-    //   }
-    // }
 
     const track = window.stream.getVideoTracks()[0];
     const settings = track.getSettings();
