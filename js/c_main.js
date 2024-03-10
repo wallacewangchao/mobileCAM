@@ -26,7 +26,7 @@ const toggle_btns = document.getElementById('toggle_btns');
 const retakeButton = document.getElementById('retakeButton');
 
 let video;
-let orginVideoHeight = 1280;
+// let orginVideoHeight = 1280;
 let amountOfCameras = 0;
 let currentFacingMode = 'environment';
 
@@ -172,11 +172,11 @@ function initCameraStream() {
   var constraints = {
     audio: false,
     video: {
-      // width: { ideal: orginVideoHeight },
-      // height: { ideal: orginVideoHeight },
-      // aspectRatio: 1,
-      width: { min: 0, ideal: window.innerWidth, max: 1920 },
-      height: { min: 0, ideal: window.innerHeight, max: 1080 },
+      width: { ideal: window.innerWidth },
+      height: { ideal: window.innerHeight },
+      // aspectRatio: window.innerWidth/window.innerHeight,
+      // width: { min: 0, ideal: window.innerWidth, max: 1920 },
+      // height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: 'environment',
     },
   };
@@ -213,11 +213,10 @@ async function takeSnapshot() {
   context = canvas.getContext('2d');
 
   // make canvas to draw cropped image of video according to the screen size. 
-  
-  let orginVideoWidth = orginVideoHeight;
-  s_height = orginVideoHeight;
-  s_width = s_height * screenWidth/screenHeight; 
-  s_x = orginVideoWidth/2 - s_width/2
+  // let orginVideoWidth = orginVideoHeight;
+  // s_height = orginVideoHeight;
+  // s_width = s_height * screenWidth/screenHeight; 
+  // s_x = orginVideoWidth/2 - s_width/2
 
   // context.drawImage(video, s_x, 0, s_width, s_height, 0, 0, screenWidth, screenHeight);
   context.drawImage(video, 0, 0);
