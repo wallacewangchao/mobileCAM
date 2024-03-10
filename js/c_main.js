@@ -169,12 +169,11 @@ function initCameraStream() {
 
   // we ask for a square resolution, it will cropped on top (landscape)
   // or cropped at the sides (landscape)
-  orginVideoHeight = window.innerHeight
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: orginVideoHeight },
-      height: { ideal: orginVideoHeight },
+      width: { ideal: window.innerWidth },
+      height: { ideal: window.innerHeight },
       // width: { min: 0, ideal: window.innerWidth, max: 1920 },
       // height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: 'environment',
