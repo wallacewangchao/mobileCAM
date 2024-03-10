@@ -26,7 +26,7 @@ const toggle_btns = document.getElementById('toggle_btns');
 const retakeButton = document.getElementById('retakeButton');
 
 let video;
-let orginVideoHeight = 4000;
+let orginVideoHeight = 1280;
 let amountOfCameras = 0;
 let currentFacingMode = 'environment';
 
@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
 function initCameraUI() {
   video = document.getElementById('video');
+  video.style.position = "absolute";
 
   // set camera focus rect size and position
   screenWidth = video.offsetWidth;
@@ -172,8 +173,8 @@ function initCameraStream() {
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: window.innerWidth },
-      height: { ideal: window.innerHeight },
+      width: { ideal: orginVideoHeight },
+      height: { ideal: orginVideoHeight },
       // width: { min: 0, ideal: window.innerWidth, max: 1920 },
       // height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: 'environment',
@@ -217,8 +218,8 @@ async function takeSnapshot() {
   s_width = s_height * screenWidth/screenHeight; 
   s_x = orginVideoWidth/2 - s_width/2
 
-  // context.drawImage(video, s_x, 0, s_width, s_height, 0, 0, screenWidth, screenHeight);
-  context.drawImage(video, 0, 0);
+  context.drawImage(video, s_x, 0, s_width, s_height, 0, 0, screenWidth, screenHeight);
+  // context.drawImage(video, 0, 0);
 
   mainDisplayDiv.appendChild(canvas);
 
