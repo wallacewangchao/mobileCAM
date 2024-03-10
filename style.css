@@ -12,16 +12,16 @@ input[type=radio] {
   visibility: hidden;
   display: none;
 }
-/* .container-fluid{
+.container-fluid{
   padding: 0 !important;
   margin: 0 !important;
-} */
+}
 
 #video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  position: absolute;
+  /* position: absolute; */
   z-index: 10;
 }
 
