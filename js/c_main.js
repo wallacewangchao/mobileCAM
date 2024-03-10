@@ -26,7 +26,7 @@ const toggle_btns = document.getElementById('toggle_btns');
 const retakeButton = document.getElementById('retakeButton');
 
 let video;
-// let orginVideoHeight = 1280;
+let orginVideoHeight = 1280;
 let amountOfCameras = 0;
 let currentFacingMode = 'environment';
 
@@ -172,9 +172,9 @@ function initCameraStream() {
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: screenWidth },
-      height: { ideal: screenHeight },
-      // aspectRatio: window.innerWidth/window.innerHeight,
+      // width: { ideal: orginVideoHeight },
+      height: { ideal: orginVideoHeight },
+      aspectRatio: window.innerWidth/window.innerHeight,
       // width: { min: 0, ideal: window.innerWidth, max: 1920 },
       // height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: 'environment',
