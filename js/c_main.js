@@ -173,7 +173,7 @@ function initCameraStream() {
     audio: false,
     video: {
       // width: { ideal: orginVideoHeight },
-      height: { ideal: orginVideoHeight },
+      // height: { ideal: window.innerHeight },
       // aspectRatio: window.innerWidth/window.innerHeight,
       // width: { min: 0, ideal: window.innerWidth, max: 1920 },
       // height: { min: 0, ideal: window.innerHeight, max: 1080 },
