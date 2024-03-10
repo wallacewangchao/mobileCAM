@@ -173,8 +173,8 @@ function initCameraStream() {
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: window.innerWidth },
-      height: { ideal: window.innerHeight },
+      width: { ideal: orginVideoHeight },
+      height: { ideal: orginVideoHeight },
       // width: { min: 0, ideal: window.innerWidth, max: 1920 },
       // height: { min: 0, ideal: window.innerHeight, max: 1080 },
       facingMode: 'environment',
@@ -214,13 +214,13 @@ async function takeSnapshot() {
 
   // make canvas to draw cropped image of video according to the screen size. 
   
-  // let orginVideoWidth = orginVideoHeight;
-  // s_height = orginVideoHeight;
-  // s_width = s_height * screenWidth/screenHeight; 
-  // s_x = orginVideoWidth/2 - s_width/2
+  let orginVideoWidth = orginVideoHeight;
+  s_height = orginVideoHeight;
+  s_width = s_height * screenWidth/screenHeight; 
+  s_x = orginVideoWidth/2 - s_width/2
 
-  // context.drawImage(video, s_x, 0, s_width, s_height, 0, 0, screenWidth, screenHeight);
-  context.drawImage(video, 0, 0);
+  context.drawImage(video, s_x, 0, s_width, s_height, 0, 0, screenWidth, screenHeight);
+  // context.drawImage(video, 0, 0);
 
   mainDisplayDiv.appendChild(canvas);
 
