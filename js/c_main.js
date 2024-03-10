@@ -26,7 +26,7 @@ const toggle_btns = document.getElementById('toggle_btns');
 const retakeButton = document.getElementById('retakeButton');
 
 let video;
-let orginVideoHeight = 1280;
+let orginVideoHeight = 4000;
 let amountOfCameras = 0;
 let currentFacingMode = 'environment';
 
@@ -217,7 +217,9 @@ async function takeSnapshot() {
   s_width = s_height * screenWidth/screenHeight; 
   s_x = orginVideoWidth/2 - s_width/2
 
-  context.drawImage(video, s_x, 0, s_width, s_height, 0, 0, screenWidth, screenHeight);
+  // context.drawImage(video, s_x, 0, s_width, s_height, 0, 0, screenWidth, screenHeight);
+  context.drawImage(video, 0, 0);
+
   mainDisplayDiv.appendChild(canvas);
 
   stopVideoStream();
