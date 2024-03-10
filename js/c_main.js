@@ -226,7 +226,7 @@ async function takeSnapshot() {
   console.log(video.videoWidth)
   console.log(video.videoHeight)
 
-  context.drawImage(video, s_x, 0, video.videoWidth * (screenWidth/screenHeight), video.videoHeight, 0, 0, screenWidth, screenHeight);
+  context.drawImage(video, s_x, 0, video.videoHeight * (screenWidth/screenHeight), video.videoHeight, 0, 0, screenWidth, screenHeight);
   // context.drawImage(video, 0, 0, canvas.width, canvas.height);
   // context.drawImage(video, 0, 0);
 
